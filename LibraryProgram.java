@@ -1,0 +1,5112 @@
+
+import java.sql.PreparedStatement;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.print.PrinterException;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Properties;
+import javax.mail.Message.RecipientType;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.table.DefaultTableModel;
+
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/*
+ * LibraryProgram.java
+ *
+ * Created on Apr 26, 2010, 10:43:08 AM
+ */
+/**
+ *
+ * @author oracle
+ */
+public class LibraryProgram extends javax.swing.JFrame {
+
+    public String bkname = null;
+    public String rateName = null;
+    public String rateId = null;
+
+    /** Creates new form LibraryProgram */
+    public LibraryProgram() {
+        initComponents();
+
+        final TrayIcon trayIcon;
+
+        if (SystemTray.isSupported()) {
+
+            SystemTray tray = SystemTray.getSystemTray();
+
+            Image image = Toolkit.getDefaultToolkit().getImage("images.jpg");
+
+            MouseListener mouseListener = new MouseListener() {
+
+                public void mouseClicked(MouseEvent e) {
+                }
+
+                public void mouseEntered(MouseEvent e) {
+                }
+
+                public void mouseExited(MouseEvent e) {
+                }
+
+                public void mousePressed(MouseEvent e) {
+                }
+
+                public void mouseReleased(MouseEvent e) {
+                }
+            };
+
+            ActionListener exitListener = new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    msg.showMessageDialog(null, "Exiting The Application!", "Exiting!", 0);
+                    System.exit(0);
+                }
+            };
+
+            ActionListener booksListener = new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    bookSearch.setVisible(true);
+                }
+            };
+
+            ActionListener memberListener = new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    memWin.setVisible(true);
+                }
+            };
+
+            ActionListener issueListener = new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    issueWin.setVisible(true);
+                }
+            };
+
+            PopupMenu popup = new PopupMenu();
+            MenuItem defaultItem = new MenuItem("Exit");
+            MenuItem books = new MenuItem("View Books");
+            MenuItem members = new MenuItem("View Members");
+            MenuItem issue = new MenuItem("Issue Books");
+            defaultItem.addActionListener(exitListener);
+            books.addActionListener(booksListener);
+            members.addActionListener(memberListener);
+            issue.addActionListener(issueListener);
+            popup.add(books);
+            popup.add(members);
+            popup.add(issue);
+            popup.add(defaultItem);
+
+            trayIcon = new TrayIcon(image, "Library", popup);
+
+            ActionListener actionListener = new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    trayIcon.displayMessage("Click Here",
+                            "The application has been minimized.",
+                            TrayIcon.MessageType.INFO);
+                }
+            };
+
+            trayIcon.setImage(Toolkit.getDefaultToolkit().getImage("src/images.gif"));
+            trayIcon.setImageAutoSize(true);
+            trayIcon.addActionListener(actionListener);
+            trayIcon.addMouseListener(mouseListener);
+
+            try {
+                tray.add(trayIcon);
+            } catch (AWTException e) {
+                msg.showMessageDialog(null, "TrayIcon could not be added.");
+            }
+
+        } else {
+            //  System Tray is not supported
+        }
+    }
+
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        addWin = new javax.swing.JFrame();
+        jLabel2 = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        custName = new javax.swing.JTextField();
+        custPhone = new javax.swing.JTextField();
+        custMob = new javax.swing.JTextField();
+        custLoc = new javax.swing.JTextField();
+        custDate = new javax.swing.JTextField();
+        custNum = new javax.swing.JTextField();
+        memAddBtn = new javax.swing.JButton();
+        jLabel38 = new javax.swing.JLabel();
+        email = new javax.swing.JTextField();
+        msg = new javax.swing.JOptionPane();
+        updWin = new javax.swing.JFrame();
+        jLabel9 = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        jPanel3 = new javax.swing.JPanel();
+        updRec = new javax.swing.JButton();
+        delRec = new javax.swing.JButton();
+        loadRec = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        updName = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        updMob = new javax.swing.JTextField();
+        updMem = new javax.swing.JTextField();
+        updRes = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        updLoc = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel39 = new javax.swing.JLabel();
+        updEmail = new javax.swing.JTextField();
+        memWin = new javax.swing.JFrame();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        userTable = new javax.swing.JTable();
+        allSearch = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JSeparator();
+        searchCritM = new javax.swing.JComboBox();
+        searchMem = new javax.swing.JButton();
+        searchTextM = new javax.swing.JTextField();
+        searchClr1 = new javax.swing.JButton();
+        addBookWin = new javax.swing.JFrame();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        bkNameIn = new javax.swing.JTextField();
+        authNameIn = new javax.swing.JTextField();
+        bkCodeIn = new javax.swing.JTextField();
+        addBookBtn = new javax.swing.JButton();
+        jLabel41 = new javax.swing.JLabel();
+        asscCodeIn = new javax.swing.JTextField();
+        jLabel43 = new javax.swing.JLabel();
+        bkQty = new javax.swing.JComboBox();
+        updBookWin = new javax.swing.JFrame();
+        jLabel18 = new javax.swing.JLabel();
+        bookDetailsPanel = new javax.swing.JPanel();
+        bkIdIn = new javax.swing.JTextField();
+        bkName = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        bookCode = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        authorName = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel42 = new javax.swing.JLabel();
+        asscCode = new javax.swing.JTextField();
+        bookUpdatePanel = new javax.swing.JPanel();
+        loadBook = new javax.swing.JButton();
+        updBook = new javax.swing.JButton();
+        remBook = new javax.swing.JButton();
+        bookSearch = new javax.swing.JFrame();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        bkTable = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        searchClr = new javax.swing.JButton();
+        popSearch = new javax.swing.JButton();
+        booksIssued = new javax.swing.JButton();
+        searchCrit = new javax.swing.JComboBox();
+        searchBooks = new javax.swing.JButton();
+        searchText = new javax.swing.JTextField();
+        searchClr2 = new javax.swing.JButton();
+        searchClr3 = new javax.swing.JButton();
+        img_lbl = new javax.swing.JLabel();
+        jMenuBar7 = new javax.swing.JMenuBar();
+        jMenu13 = new javax.swing.JMenu();
+        jMenuItem55 = new javax.swing.JMenuItem();
+        jMenuItem56 = new javax.swing.JMenuItem();
+        jSeparator23 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem57 = new javax.swing.JMenuItem();
+        jMenuItem58 = new javax.swing.JMenuItem();
+        jSeparator24 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem59 = new javax.swing.JMenuItem();
+        jMenu14 = new javax.swing.JMenu();
+        jMenuItem60 = new javax.swing.JMenuItem();
+        jMenuItem61 = new javax.swing.JMenuItem();
+        jSeparator25 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem62 = new javax.swing.JMenuItem();
+        jMenuItem63 = new javax.swing.JMenuItem();
+        issueWin = new javax.swing.JFrame();
+        jLabel23 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        issueAuthor = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        issueName = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
+        issueCode = new javax.swing.JTextField();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        issueId = new javax.swing.JTextField();
+        jPanel5 = new javax.swing.JPanel();
+        issueBtn = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        issueNameLoad = new javax.swing.JButton();
+        issueCodeLoad = new javax.swing.JButton();
+        jPanel10 = new javax.swing.JPanel();
+        issueMemNum = new javax.swing.JTextField();
+        jLabel33 = new javax.swing.JLabel();
+        jLabel34 = new javax.swing.JLabel();
+        issueMemName = new javax.swing.JTextField();
+        jLabel37 = new javax.swing.JLabel();
+        issueDate = new javax.swing.JTextField();
+        jPanel11 = new javax.swing.JPanel();
+        issueMemLoad = new javax.swing.JButton();
+        jMenuBar8 = new javax.swing.JMenuBar();
+        jMenu15 = new javax.swing.JMenu();
+        jMenuItem64 = new javax.swing.JMenuItem();
+        jMenuItem65 = new javax.swing.JMenuItem();
+        jSeparator26 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem66 = new javax.swing.JMenuItem();
+        jMenuItem67 = new javax.swing.JMenuItem();
+        jSeparator27 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem68 = new javax.swing.JMenuItem();
+        jMenu16 = new javax.swing.JMenu();
+        jMenuItem69 = new javax.swing.JMenuItem();
+        jMenuItem70 = new javax.swing.JMenuItem();
+        jSeparator28 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem71 = new javax.swing.JMenuItem();
+        jMenuItem72 = new javax.swing.JMenuItem();
+        returnWin = new javax.swing.JFrame();
+        jLabel28 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        returnId = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        returnName = new javax.swing.JTextField();
+        jLabel32 = new javax.swing.JLabel();
+        returnCode = new javax.swing.JTextField();
+        returnAuthor = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        returnNameLoad = new javax.swing.JButton();
+        returnCodeLoad = new javax.swing.JButton();
+        jPanel9 = new javax.swing.JPanel();
+        returnBtn = new javax.swing.JButton();
+        jPanel12 = new javax.swing.JPanel();
+        returnMemNum = new javax.swing.JTextField();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        returnMemName = new javax.swing.JTextField();
+        jPanel13 = new javax.swing.JPanel();
+        returnMemLoad = new javax.swing.JButton();
+        jMenuBar9 = new javax.swing.JMenuBar();
+        jMenu17 = new javax.swing.JMenu();
+        jMenuItem73 = new javax.swing.JMenuItem();
+        jMenuItem74 = new javax.swing.JMenuItem();
+        jSeparator29 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem75 = new javax.swing.JMenuItem();
+        jMenuItem76 = new javax.swing.JMenuItem();
+        jSeparator30 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem77 = new javax.swing.JMenuItem();
+        jMenu18 = new javax.swing.JMenu();
+        jMenuItem78 = new javax.swing.JMenuItem();
+        jMenuItem79 = new javax.swing.JMenuItem();
+        jSeparator31 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem80 = new javax.swing.JMenuItem();
+        jMenuItem81 = new javax.swing.JMenuItem();
+        overdueWin = new javax.swing.JFrame();
+        jLabel40 = new javax.swing.JLabel();
+        jSeparator32 = new javax.swing.JSeparator();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        overdueTbl = new javax.swing.JTable();
+        sendMail = new javax.swing.JButton();
+        mailPass = new javax.swing.JDialog();
+        mailDue = new javax.swing.JButton();
+        passin = new javax.swing.JPasswordField();
+        payment = new javax.swing.JFrame();
+        jLabel44 = new javax.swing.JLabel();
+        jSeparator8 = new javax.swing.JSeparator();
+        jLabel45 = new javax.swing.JLabel();
+        jLabel46 = new javax.swing.JLabel();
+        jLabel47 = new javax.swing.JLabel();
+        jPanel15 = new javax.swing.JPanel();
+        payCheque = new javax.swing.JRadioButton();
+        payCard = new javax.swing.JRadioButton();
+        payCash = new javax.swing.JRadioButton();
+        payName = new javax.swing.JLabel();
+        payPhone = new javax.swing.JLabel();
+        payLoc = new javax.swing.JLabel();
+        jLabel48 = new javax.swing.JLabel();
+        payMem = new javax.swing.JLabel();
+        jLabel49 = new javax.swing.JLabel();
+        payAmt = new javax.swing.JTextField();
+        payLabel = new javax.swing.JLabel();
+        jLabel50 = new javax.swing.JLabel();
+        payDate = new javax.swing.JLabel();
+        payBtn = new javax.swing.JButton();
+        jLabel51 = new javax.swing.JLabel();
+        num = new javax.swing.JTextField();
+        jLabel58 = new javax.swing.JLabel();
+        payMail = new javax.swing.JLabel();
+        paymentMethod = new javax.swing.ButtonGroup();
+        payWin = new javax.swing.JFrame();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        payTable = new javax.swing.JTable();
+        payNw = new javax.swing.JButton();
+        sendMailPayment = new javax.swing.JButton();
+        payHere = new javax.swing.JFrame();
+        jLabel52 = new javax.swing.JLabel();
+        jSeparator9 = new javax.swing.JSeparator();
+        jLabel53 = new javax.swing.JLabel();
+        namePay = new javax.swing.JTextField();
+        jLabel54 = new javax.swing.JLabel();
+        memCode = new javax.swing.JTextField();
+        jLabel55 = new javax.swing.JLabel();
+        toBePaid = new javax.swing.JTextField();
+        jPanel16 = new javax.swing.JPanel();
+        byName = new javax.swing.JButton();
+        byCode = new javax.swing.JButton();
+        payCheck = new javax.swing.JCheckBox();
+        confirm = new javax.swing.JButton();
+        popup = new javax.swing.JPopupMenu();
+        printFrame = new javax.swing.JFrame();
+        jLabel57 = new javax.swing.JLabel();
+        jSeparator10 = new javax.swing.JSeparator();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        printArea = new javax.swing.JTextArea();
+        printOk = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        mailPass2 = new javax.swing.JDialog();
+        payDue = new javax.swing.JButton();
+        passin1 = new javax.swing.JPasswordField();
+        fc = new javax.swing.JFileChooser();
+        rateWin = new javax.swing.JFrame();
+        jLabel59 = new javax.swing.JLabel();
+        jSeparator11 = new javax.swing.JSeparator();
+        jLabel60 = new javax.swing.JLabel();
+        rateBox = new javax.swing.JComboBox();
+        submitRate = new javax.swing.JButton();
+        libraryPanel = new javax.swing.JPanel();
+        memAdd = new javax.swing.JButton();
+        memRem = new javax.swing.JButton();
+        bookAdd = new javax.swing.JButton();
+        bookUpd = new javax.swing.JButton();
+        memList = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        memberPanel = new javax.swing.JPanel();
+        searchBooksBtn = new javax.swing.JButton();
+        issueBooksBtn = new javax.swing.JButton();
+        returnBooksBtn = new javax.swing.JButton();
+        jPanel14 = new javax.swing.JPanel();
+        overdue = new javax.swing.JButton();
+        payDueBtn = new javax.swing.JButton();
+        jLabel56 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+
+        addWin.setTitle("Add Member");
+        addWin.setBackground(new java.awt.Color(0, 153, 255));
+        addWin.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        addWin.setForeground(new java.awt.Color(51, 153, 255));
+        addWin.setMinimumSize(new java.awt.Dimension(420, 450));
+        addWin.setResizable(false);
+        addWin.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                addWinWindowActivated(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 36));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Add Member");
+
+        jLabel3.setText("Name :");
+
+        jLabel4.setText("Residence Phone :");
+
+        jLabel5.setText("Mobile Phone :");
+
+        jLabel6.setText("Location :");
+
+        jLabel7.setText("Date of Joining :");
+
+        jLabel8.setText("Member Code :");
+
+        custName.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        custPhone.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        custMob.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        custLoc.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        custDate.setEditable(false);
+        custDate.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        custNum.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        custNum.setEnabled(false);
+
+        memAddBtn.setText("Add New Member");
+        memAddBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                memAddBtnMouseEntered(evt);
+            }
+        });
+        memAddBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                memAddBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel38.setText("Email ID :");
+
+        javax.swing.GroupLayout addWinLayout = new javax.swing.GroupLayout(addWin.getContentPane());
+        addWin.getContentPane().setLayout(addWinLayout);
+        addWinLayout.setHorizontalGroup(
+            addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addGroup(addWinLayout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(jLabel2)
+                .addContainerGap(89, Short.MAX_VALUE))
+            .addGroup(addWinLayout.createSequentialGroup()
+                .addGap(132, 132, 132)
+                .addComponent(memAddBtn)
+                .addContainerGap(151, Short.MAX_VALUE))
+            .addGroup(addWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel38))
+                .addGap(61, 61, 61)
+                .addGroup(addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(custName, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                    .addComponent(custPhone, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                    .addComponent(custMob, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                    .addComponent(custLoc, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                    .addComponent(custDate, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                    .addComponent(custNum, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        addWinLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {custNum, email});
+
+        addWinLayout.setVerticalGroup(
+            addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addWinLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(custName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(custPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(custMob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(custLoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(custDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(custNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(addWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel38)
+                    .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addComponent(memAddBtn)
+                .addContainerGap())
+        );
+
+        updWin.setTitle("Update Member");
+        updWin.setMinimumSize(new java.awt.Dimension(550, 410));
+        updWin.setResizable(false);
+        updWin.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                updWinWindowActivated(evt);
+            }
+        });
+
+        jLabel9.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 36));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("Update Member");
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Update Commands"));
+
+        updRec.setText("Update Record");
+        updRec.setEnabled(false);
+        updRec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updRecActionPerformed(evt);
+            }
+        });
+
+        delRec.setText("Delete Record");
+        delRec.setEnabled(false);
+        delRec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delRecActionPerformed(evt);
+            }
+        });
+
+        loadRec.setText("Load Record");
+        loadRec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadRecActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Clear");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                    .addComponent(loadRec, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                    .addComponent(updRec, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                    .addComponent(delRec, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(loadRec)
+                .addGap(18, 18, 18)
+                .addComponent(updRec)
+                .addGap(18, 18, 18)
+                .addComponent(delRec)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addContainerGap())
+        );
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Search Criteria"));
+
+        jLabel12.setText("Mobile Number:");
+
+        updName.setToolTipText("Case Sensitive");
+
+        jLabel14.setText("Location :");
+
+        jLabel10.setText("Member ID :");
+
+        updMob.setEnabled(false);
+
+        updRes.setEnabled(false);
+
+        jLabel13.setText("Residence Number :");
+
+        updLoc.setEnabled(false);
+
+        jLabel11.setText("Name :");
+
+        jLabel39.setText("Email ID :");
+
+        updEmail.setEnabled(false);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel14)
+                            .addComponent(jLabel39))
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(updEmail)
+                            .addComponent(updLoc, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(updRes)
+                            .addComponent(updMob)
+                            .addComponent(updName, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                            .addComponent(updMem))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(updMem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(updName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(updMob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(updRes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(updLoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel39)
+                    .addComponent(updEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39))
+        );
+
+        javax.swing.GroupLayout updWinLayout = new javax.swing.GroupLayout(updWin.getContentPane());
+        updWin.getContentPane().setLayout(updWinLayout);
+        updWinLayout.setHorizontalGroup(
+            updWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11))
+            .addComponent(jSeparator3, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, updWinLayout.createSequentialGroup()
+                .addContainerGap(161, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addGap(93, 93, 93))
+        );
+        updWinLayout.setVerticalGroup(
+            updWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updWinLayout.createSequentialGroup()
+                .addComponent(jLabel9)
+                .addGap(8, 8, 8)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(updWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        memWin.setTitle("Member Search");
+        memWin.setMinimumSize(new java.awt.Dimension(600, 400));
+        memWin.setResizable(false);
+        memWin.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                memWinWindowActivated(evt);
+            }
+        });
+
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        userTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Code", "Name", "Phone No.", "Mobile No.", "Location", "Email ID"
+            }
+        ));
+        userTable.setCellSelectionEnabled(true);
+        userTable.setFocusable(false);
+        jScrollPane1.setViewportView(userTable);
+
+        allSearch.setText("Search All Members");
+        allSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                allSearchActionPerformed(evt);
+            }
+        });
+
+        searchCritM.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Search :", " ", "Name", "Location", "Phone", "Code" }));
+
+        searchMem.setText("Search");
+        searchMem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                searchMemMouseEntered(evt);
+            }
+        });
+        searchMem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchMemActionPerformed(evt);
+            }
+        });
+
+        searchTextM.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                searchTextMMouseEntered(evt);
+            }
+        });
+        searchTextM.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                searchTextMCaretUpdate(evt);
+            }
+        });
+
+        searchClr1.setText("Clear Search");
+        searchClr1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchClr1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout memWinLayout = new javax.swing.GroupLayout(memWin.getContentPane());
+        memWin.getContentPane().setLayout(memWinLayout);
+        memWinLayout.setHorizontalGroup(
+            memWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator4, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+            .addGroup(memWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, memWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(memWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(searchTextM)
+                    .addComponent(searchCritM, 0, 193, Short.MAX_VALUE))
+                .addGap(133, 133, 133)
+                .addGroup(memWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(allSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                    .addComponent(searchMem, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                    .addComponent(searchClr1, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        memWinLayout.setVerticalGroup(
+            memWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(memWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(memWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchCritM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchMem))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(memWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchTextM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchClr1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(allSearch)
+                .addGap(33, 33, 33))
+        );
+
+        addBookWin.setTitle("Add Books");
+        addBookWin.setMinimumSize(new java.awt.Dimension(350, 330));
+        addBookWin.setResizable(false);
+        addBookWin.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                addBookWinWindowActivated(evt);
+            }
+        });
+
+        jLabel15.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 36));
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel15.setText("Add New Book");
+
+        jLabel1.setText("Book Name :");
+
+        jLabel16.setText("Author Name :");
+
+        jLabel17.setText("Book Code :");
+
+        bkNameIn.setToolTipText("");
+
+        authNameIn.setToolTipText("Format: (Last Name, First Name)");
+
+        bkCodeIn.setEnabled(false);
+
+        addBookBtn.setText("Add New Book");
+        addBookBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                addBookBtnMouseEntered(evt);
+            }
+        });
+        addBookBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBookBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel41.setText("Assc. Code :");
+
+        jLabel43.setText("Quantity :");
+
+        bkQty.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+
+        javax.swing.GroupLayout addBookWinLayout = new javax.swing.GroupLayout(addBookWin.getContentPane());
+        addBookWin.getContentPane().setLayout(addBookWinLayout);
+        addBookWinLayout.setHorizontalGroup(
+            addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addBookWinLayout.createSequentialGroup()
+                .addGroup(addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(addBookWinLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel15))
+                    .addGroup(addBookWinLayout.createSequentialGroup()
+                        .addGap(105, 105, 105)
+                        .addComponent(addBookBtn))
+                    .addGroup(addBookWinLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(addBookWinLayout.createSequentialGroup()
+                                .addGroup(addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel17)
+                                    .addComponent(jLabel16)
+                                    .addComponent(jLabel1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addComponent(jLabel41)
+                            .addComponent(jLabel43))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(bkQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(asscCodeIn, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                            .addComponent(bkCodeIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(authNameIn, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                            .addComponent(bkNameIn, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
+        );
+
+        addBookWinLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {authNameIn, bkCodeIn, bkNameIn});
+
+        addBookWinLayout.setVerticalGroup(
+            addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addBookWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel15)
+                .addGap(18, 18, 18)
+                .addGroup(addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bkNameIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addGroup(addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(authNameIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addGap(18, 18, 18)
+                .addGroup(addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bkCodeIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
+                .addGap(18, 18, 18)
+                .addGroup(addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel41)
+                    .addComponent(asscCodeIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(addBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel43)
+                    .addComponent(bkQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(addBookBtn)
+                .addContainerGap())
+        );
+
+        updBookWin.setTitle("Update Book Details");
+        updBookWin.setMinimumSize(new java.awt.Dimension(550, 400));
+        updBookWin.setResizable(false);
+        updBookWin.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                updBookWinWindowActivated(evt);
+            }
+        });
+
+        jLabel18.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 36));
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel18.setText("Update Books");
+
+        bookDetailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Enter Book Details"));
+
+        bkIdIn.setEnabled(false);
+
+        jLabel22.setText("Author:");
+
+        jLabel21.setText("Book Code:");
+
+        bookCode.setEditable(false);
+        bookCode.setEnabled(false);
+
+        jLabel19.setText("Book ID:");
+
+        authorName.setEnabled(false);
+
+        jLabel20.setText("Book Name:");
+
+        jLabel42.setText("Assc. Code :");
+
+        asscCode.setEnabled(false);
+
+        javax.swing.GroupLayout bookDetailsPanelLayout = new javax.swing.GroupLayout(bookDetailsPanel);
+        bookDetailsPanel.setLayout(bookDetailsPanelLayout);
+        bookDetailsPanelLayout.setHorizontalGroup(
+            bookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bookDetailsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(bookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel20)
+                    .addComponent(jLabel19)
+                    .addComponent(jLabel21)
+                    .addComponent(jLabel22)
+                    .addComponent(jLabel42))
+                .addGap(72, 72, 72)
+                .addGroup(bookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(authorName, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                    .addComponent(bookCode, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                    .addComponent(bkName, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                    .addComponent(bkIdIn, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                    .addComponent(asscCode, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        bookDetailsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {authorName, bkIdIn, bkName, bookCode});
+
+        bookDetailsPanelLayout.setVerticalGroup(
+            bookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bookDetailsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(bookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19)
+                    .addComponent(bkIdIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(bookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(bookCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(bookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(bkName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(bookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(authorName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(bookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel42)
+                    .addComponent(asscCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        bookUpdatePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Update Options"));
+
+        loadBook.setText("Load Book Data");
+        loadBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadBookActionPerformed(evt);
+            }
+        });
+
+        updBook.setText("Update Book Data");
+        updBook.setEnabled(false);
+        updBook.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                updBookMouseEntered(evt);
+            }
+        });
+        updBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updBookActionPerformed(evt);
+            }
+        });
+
+        remBook.setText("Remove Book Data");
+        remBook.setEnabled(false);
+        remBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                remBookActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout bookUpdatePanelLayout = new javax.swing.GroupLayout(bookUpdatePanel);
+        bookUpdatePanel.setLayout(bookUpdatePanelLayout);
+        bookUpdatePanelLayout.setHorizontalGroup(
+            bookUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bookUpdatePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(bookUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(loadBook, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(updBook, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(remBook, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+
+        bookUpdatePanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {loadBook, remBook, updBook});
+
+        bookUpdatePanelLayout.setVerticalGroup(
+            bookUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bookUpdatePanelLayout.createSequentialGroup()
+                .addComponent(loadBook)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(updBook)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(remBook)
+                .addContainerGap(11, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout updBookWinLayout = new javax.swing.GroupLayout(updBookWin.getContentPane());
+        updBookWin.getContentPane().setLayout(updBookWinLayout);
+        updBookWinLayout.setHorizontalGroup(
+            updBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updBookWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bookDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bookUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, updBookWinLayout.createSequentialGroup()
+                .addContainerGap(126, Short.MAX_VALUE)
+                .addComponent(jLabel18)
+                .addGap(137, 137, 137))
+        );
+        updBookWinLayout.setVerticalGroup(
+            updBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updBookWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel18)
+                .addGap(18, 18, 18)
+                .addGroup(updBookWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bookDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bookUpdatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        bookSearch.setTitle("Books List");
+        bookSearch.setMinimumSize(new java.awt.Dimension(800, 500));
+        bookSearch.setResizable(false);
+        bookSearch.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                bookSearchWindowActivated(evt);
+            }
+        });
+
+        bkTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Assc. No.", "Book Code", "Book Name", "Author", "Status", "Rating"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        bkTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        bkTable.setCellSelectionEnabled(true);
+        bkTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bkTableMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(bkTable);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Search By:"));
+
+        searchClr.setText("Clear Search");
+        searchClr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchClrActionPerformed(evt);
+            }
+        });
+
+        popSearch.setText("Search Most Popular");
+        popSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popSearchActionPerformed(evt);
+            }
+        });
+
+        booksIssued.setText("Show Issued Books");
+        booksIssued.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                booksIssuedActionPerformed(evt);
+            }
+        });
+
+        searchCrit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Search :", " ", "Name", "Author", "Book Code", "Assc. No." }));
+
+        searchBooks.setText("Search");
+        searchBooks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchBooksMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                searchBooksMouseEntered(evt);
+            }
+        });
+        searchBooks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchBooksActionPerformed(evt);
+            }
+        });
+
+        searchText.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                searchTextMouseEntered(evt);
+            }
+        });
+        searchText.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                searchTextCaretUpdate(evt);
+            }
+        });
+
+        searchClr2.setText("Clear Search");
+        searchClr2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchClr2ActionPerformed(evt);
+            }
+        });
+
+        searchClr3.setText("Show All Books");
+        searchClr3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchClr3ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(booksIssued, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(popSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(searchCrit, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchBooks, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(searchText, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchClr2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchClr, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(searchClr3, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchCrit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchBooks))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchClr)
+                    .addComponent(searchClr2))
+                .addGap(11, 11, 11)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(booksIssued)
+                    .addComponent(popSearch))
+                .addGap(18, 18, 18)
+                .addComponent(searchClr3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        img_lbl.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        img_lbl.setFocusable(false);
+
+        jMenu13.setText("File");
+
+        jMenuItem55.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem55.setText("Search Books");
+        jMenuItem55.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem55ActionPerformed(evt);
+            }
+        });
+        jMenu13.add(jMenuItem55);
+
+        jMenuItem56.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem56.setText("Search Users");
+        jMenuItem56.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem56ActionPerformed(evt);
+            }
+        });
+        jMenu13.add(jMenuItem56);
+        jMenu13.add(jSeparator23);
+
+        jMenuItem57.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem57.setText("Issue Books");
+        jMenuItem57.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem57ActionPerformed(evt);
+            }
+        });
+        jMenu13.add(jMenuItem57);
+
+        jMenuItem58.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem58.setText("Return Books");
+        jMenuItem58.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem58ActionPerformed(evt);
+            }
+        });
+        jMenu13.add(jMenuItem58);
+        jMenu13.add(jSeparator24);
+
+        jMenuItem59.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem59.setToolTipText("Exit");
+        jMenuItem59.setName("Exit"); // NOI18N
+        jMenuItem59.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem59ActionPerformed(evt);
+            }
+        });
+        jMenu13.add(jMenuItem59);
+
+        jMenuBar7.add(jMenu13);
+
+        jMenu14.setText("Edit");
+
+        jMenuItem60.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem60.setText("Add Member");
+        jMenuItem60.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem60ActionPerformed(evt);
+            }
+        });
+        jMenu14.add(jMenuItem60);
+
+        jMenuItem61.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem61.setText("Add Books");
+        jMenuItem61.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem61ActionPerformed(evt);
+            }
+        });
+        jMenu14.add(jMenuItem61);
+        jMenu14.add(jSeparator25);
+
+        jMenuItem62.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem62.setText("Update Member Details");
+        jMenuItem62.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem62ActionPerformed(evt);
+            }
+        });
+        jMenu14.add(jMenuItem62);
+
+        jMenuItem63.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem63.setText("Update Book Details");
+        jMenuItem63.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem63ActionPerformed(evt);
+            }
+        });
+        jMenu14.add(jMenuItem63);
+
+        jMenuBar7.add(jMenu14);
+
+        bookSearch.setJMenuBar(jMenuBar7);
+
+        javax.swing.GroupLayout bookSearchLayout = new javax.swing.GroupLayout(bookSearch.getContentPane());
+        bookSearch.getContentPane().setLayout(bookSearchLayout);
+        bookSearchLayout.setHorizontalGroup(
+            bookSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bookSearchLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(bookSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(bookSearchLayout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(img_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        bookSearchLayout.setVerticalGroup(
+            bookSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bookSearchLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(bookSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(img_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        issueWin.setTitle("Issue Book");
+        issueWin.setMinimumSize(new java.awt.Dimension(600, 450));
+        issueWin.setResizable(false);
+        issueWin.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                issueWinWindowActivated(evt);
+            }
+        });
+
+        jLabel23.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 36));
+        jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel23.setText("Issue New Book");
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Enter Book Details"));
+
+        issueAuthor.setEnabled(false);
+
+        jLabel27.setText("Book ID :");
+
+        jLabel26.setText("Author Name :");
+
+        jLabel24.setText("Book Name :");
+
+        jLabel25.setText("Book Code :");
+
+        issueId.setEnabled(false);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel24)
+                    .addComponent(jLabel25)
+                    .addComponent(jLabel26)
+                    .addComponent(jLabel27))
+                .addGap(23, 23, 23)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(issueId, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                    .addComponent(issueAuthor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                    .addComponent(issueCode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                    .addComponent(issueName, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel24)
+                    .addComponent(issueName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel25)
+                    .addComponent(issueCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel26)
+                    .addComponent(issueAuthor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel27)
+                    .addComponent(issueId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Issue Options"));
+
+        issueBtn.setText("Issue Book");
+        issueBtn.setEnabled(false);
+        issueBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                issueBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(issueBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(issueBtn)
+        );
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Load"));
+
+        issueNameLoad.setText("By Name");
+        issueNameLoad.setEnabled(false);
+        issueNameLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                issueNameLoadActionPerformed(evt);
+            }
+        });
+
+        issueCodeLoad.setText("By Book Code");
+        issueCodeLoad.setEnabled(false);
+        issueCodeLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                issueCodeLoadActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(issueNameLoad)
+                    .addComponent(issueCodeLoad))
+                .addContainerGap())
+        );
+
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {issueCodeLoad, issueNameLoad});
+
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(issueNameLoad)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(issueCodeLoad)
+                .addContainerGap())
+        );
+
+        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder("Member Details"));
+
+        jLabel33.setText("Enter Member Name :");
+
+        jLabel34.setText("Enter Member Code :");
+
+        jLabel37.setText("Date of Issue :");
+
+        issueDate.setEditable(false);
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addComponent(jLabel33)
+                        .addGap(18, 18, 18)
+                        .addComponent(issueMemName, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel34)
+                            .addComponent(jLabel37))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(issueDate)
+                            .addComponent(issueMemNum, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel10Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {issueMemName, issueMemNum});
+
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel33)
+                    .addComponent(issueMemName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel34)
+                    .addComponent(issueMemNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel37)
+                    .addComponent(issueDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        jPanel11.setBorder(javax.swing.BorderFactory.createTitledBorder("Member Options"));
+
+        issueMemLoad.setText("Load Member");
+        issueMemLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                issueMemLoadActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(issueMemLoad)
+                .addContainerGap())
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(issueMemLoad)
+                .addContainerGap())
+        );
+
+        jMenu15.setText("File");
+
+        jMenuItem64.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem64.setText("Search Books");
+        jMenuItem64.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem64ActionPerformed(evt);
+            }
+        });
+        jMenu15.add(jMenuItem64);
+
+        jMenuItem65.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem65.setText("Search Users");
+        jMenuItem65.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem65ActionPerformed(evt);
+            }
+        });
+        jMenu15.add(jMenuItem65);
+        jMenu15.add(jSeparator26);
+
+        jMenuItem66.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem66.setText("Issue Books");
+        jMenuItem66.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem66ActionPerformed(evt);
+            }
+        });
+        jMenu15.add(jMenuItem66);
+
+        jMenuItem67.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem67.setText("Return Books");
+        jMenuItem67.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem67ActionPerformed(evt);
+            }
+        });
+        jMenu15.add(jMenuItem67);
+        jMenu15.add(jSeparator27);
+
+        jMenuItem68.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem68.setText("Exit");
+        jMenu15.add(jMenuItem68);
+
+        jMenuBar8.add(jMenu15);
+
+        jMenu16.setText("Edit");
+
+        jMenuItem69.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem69.setText("Add Member");
+        jMenuItem69.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem69ActionPerformed(evt);
+            }
+        });
+        jMenu16.add(jMenuItem69);
+
+        jMenuItem70.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem70.setText("Add Books");
+        jMenuItem70.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem70ActionPerformed(evt);
+            }
+        });
+        jMenu16.add(jMenuItem70);
+        jMenu16.add(jSeparator28);
+
+        jMenuItem71.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem71.setText("Update Member Details");
+        jMenuItem71.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem71ActionPerformed(evt);
+            }
+        });
+        jMenu16.add(jMenuItem71);
+
+        jMenuItem72.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem72.setText("Update Book Details");
+        jMenuItem72.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem72ActionPerformed(evt);
+            }
+        });
+        jMenu16.add(jMenuItem72);
+
+        jMenuBar8.add(jMenu16);
+
+        issueWin.setJMenuBar(jMenuBar8);
+
+        javax.swing.GroupLayout issueWinLayout = new javax.swing.GroupLayout(issueWin.getContentPane());
+        issueWin.getContentPane().setLayout(issueWinLayout);
+        issueWinLayout.setHorizontalGroup(
+            issueWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(issueWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(issueWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, issueWinLayout.createSequentialGroup()
+                        .addComponent(jLabel23)
+                        .addGap(85, 85, 85))
+                    .addGroup(issueWinLayout.createSequentialGroup()
+                        .addGroup(issueWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(issueWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(22, Short.MAX_VALUE))))
+        );
+
+        issueWinLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jPanel11, jPanel5, jPanel6});
+
+        issueWinLayout.setVerticalGroup(
+            issueWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(issueWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(issueWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(issueWinLayout.createSequentialGroup()
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel2, 0, 184, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(issueWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        returnWin.setTitle("Return Book");
+        returnWin.setMinimumSize(new java.awt.Dimension(550, 430));
+        returnWin.setResizable(false);
+        returnWin.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                returnWinWindowActivated(evt);
+            }
+        });
+
+        jLabel28.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 36));
+        jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel28.setText("Return A Book");
+
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Enter Book Details"));
+
+        returnId.setEnabled(false);
+
+        jLabel31.setText("Author Name :");
+
+        jLabel30.setText("Book Code :");
+
+        jLabel32.setText("Book Id :");
+
+        returnAuthor.setEnabled(false);
+
+        jLabel29.setText("Book Name :");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel30)
+                    .addComponent(jLabel31)
+                    .addComponent(jLabel32))
+                .addGap(44, 44, 44)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(returnName, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                    .addComponent(returnCode)
+                    .addComponent(returnAuthor)
+                    .addComponent(returnId))
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel29)
+                    .addComponent(returnName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel30)
+                    .addComponent(returnCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel31)
+                    .addComponent(returnAuthor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel32)
+                    .addComponent(returnId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Load"));
+
+        returnNameLoad.setText("By Name");
+        returnNameLoad.setEnabled(false);
+        returnNameLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnNameLoadActionPerformed(evt);
+            }
+        });
+
+        returnCodeLoad.setText("By Book Code");
+        returnCodeLoad.setEnabled(false);
+        returnCodeLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnCodeLoadActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(returnNameLoad)
+                    .addComponent(returnCodeLoad))
+                .addContainerGap())
+        );
+
+        jPanel8Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {returnCodeLoad, returnNameLoad});
+
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(returnNameLoad)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(returnCodeLoad)
+                .addContainerGap())
+        );
+
+        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder("Return Options"));
+
+        returnBtn.setText("Return Book");
+        returnBtn.setEnabled(false);
+        returnBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(returnBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(returnBtn)
+        );
+
+        jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder("Member Details"));
+
+        jLabel35.setText("Enter Member Name :");
+
+        jLabel36.setText("Enter Member Code :");
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addComponent(jLabel36)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addComponent(returnMemNum, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addComponent(jLabel35)
+                        .addGap(18, 18, 18)
+                        .addComponent(returnMemName, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(42, Short.MAX_VALUE))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel35)
+                    .addComponent(returnMemName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel36)
+                    .addComponent(returnMemNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder("Member Options"));
+
+        returnMemLoad.setText("Load Member");
+        returnMemLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnMemLoadActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+        jPanel13.setLayout(jPanel13Layout);
+        jPanel13Layout.setHorizontalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(returnMemLoad)
+                .addContainerGap())
+        );
+        jPanel13Layout.setVerticalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(returnMemLoad)
+                .addContainerGap())
+        );
+
+        jMenu17.setText("File");
+
+        jMenuItem73.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem73.setText("Search Books");
+        jMenuItem73.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem73ActionPerformed(evt);
+            }
+        });
+        jMenu17.add(jMenuItem73);
+
+        jMenuItem74.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem74.setText("Search Users");
+        jMenuItem74.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem74ActionPerformed(evt);
+            }
+        });
+        jMenu17.add(jMenuItem74);
+        jMenu17.add(jSeparator29);
+
+        jMenuItem75.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem75.setText("Issue Books");
+        jMenuItem75.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem75ActionPerformed(evt);
+            }
+        });
+        jMenu17.add(jMenuItem75);
+
+        jMenuItem76.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem76.setText("Return Books");
+        jMenuItem76.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem76ActionPerformed(evt);
+            }
+        });
+        jMenu17.add(jMenuItem76);
+        jMenu17.add(jSeparator30);
+
+        jMenuItem77.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem77.setText("Exit");
+        jMenu17.add(jMenuItem77);
+
+        jMenuBar9.add(jMenu17);
+
+        jMenu18.setText("Edit");
+
+        jMenuItem78.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem78.setText("Add Member");
+        jMenuItem78.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem78ActionPerformed(evt);
+            }
+        });
+        jMenu18.add(jMenuItem78);
+
+        jMenuItem79.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem79.setText("Add Books");
+        jMenuItem79.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem79ActionPerformed(evt);
+            }
+        });
+        jMenu18.add(jMenuItem79);
+        jMenu18.add(jSeparator31);
+
+        jMenuItem80.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem80.setText("Update Member Details");
+        jMenuItem80.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem80ActionPerformed(evt);
+            }
+        });
+        jMenu18.add(jMenuItem80);
+
+        jMenuItem81.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem81.setText("Update Book Details");
+        jMenuItem81.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem81ActionPerformed(evt);
+            }
+        });
+        jMenu18.add(jMenuItem81);
+
+        jMenuBar9.add(jMenu18);
+
+        returnWin.setJMenuBar(jMenuBar9);
+
+        javax.swing.GroupLayout returnWinLayout = new javax.swing.GroupLayout(returnWin.getContentPane());
+        returnWin.getContentPane().setLayout(returnWinLayout);
+        returnWinLayout.setHorizontalGroup(
+            returnWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(returnWinLayout.createSequentialGroup()
+                .addGroup(returnWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, returnWinLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 349, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(returnWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(returnWinLayout.createSequentialGroup()
+                        .addGap(111, 111, 111)
+                        .addComponent(jLabel28))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, returnWinLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        returnWinLayout.setVerticalGroup(
+            returnWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(returnWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel28)
+                .addGap(18, 18, 18)
+                .addGroup(returnWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(returnWinLayout.createSequentialGroup()
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(returnWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        overdueWin.setTitle("Overdue Details");
+        overdueWin.setMinimumSize(new java.awt.Dimension(600, 400));
+        overdueWin.setResizable(false);
+        overdueWin.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                overdueWinWindowActivated(evt);
+            }
+        });
+
+        jLabel40.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 36));
+        jLabel40.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel40.setText("Overdue");
+
+        overdueTbl.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Return Date", "Phone Number ", "Email ID"
+            }
+        ));
+        jScrollPane3.setViewportView(overdueTbl);
+
+        sendMail.setText("Send Mail");
+        sendMail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMailActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout overdueWinLayout = new javax.swing.GroupLayout(overdueWin.getContentPane());
+        overdueWin.getContentPane().setLayout(overdueWinLayout);
+        overdueWinLayout.setHorizontalGroup(
+            overdueWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator32, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
+            .addGroup(overdueWinLayout.createSequentialGroup()
+                .addGap(178, 178, 178)
+                .addComponent(jLabel40)
+                .addContainerGap(204, Short.MAX_VALUE))
+            .addGroup(overdueWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(overdueWinLayout.createSequentialGroup()
+                .addGap(214, 214, 214)
+                .addComponent(sendMail)
+                .addContainerGap(257, Short.MAX_VALUE))
+        );
+        overdueWinLayout.setVerticalGroup(
+            overdueWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(overdueWinLayout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addComponent(jLabel40)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator32, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sendMail)
+                .addGap(7, 7, 7))
+        );
+
+        mailPass.setTitle("Password");
+        mailPass.setMinimumSize(new java.awt.Dimension(400, 80));
+        mailPass.setModal(true);
+        mailPass.setResizable(false);
+
+        mailDue.setText("Enter Email Password");
+        mailDue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mailDueActionPerformed(evt);
+            }
+        });
+
+        passin.setMinimumSize(new java.awt.Dimension(400, 70));
+
+        javax.swing.GroupLayout mailPassLayout = new javax.swing.GroupLayout(mailPass.getContentPane());
+        mailPass.getContentPane().setLayout(mailPassLayout);
+        mailPassLayout.setHorizontalGroup(
+            mailPassLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mailPassLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mailDue)
+                .addGap(18, 18, 18)
+                .addComponent(passin, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        mailPassLayout.setVerticalGroup(
+            mailPassLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mailPassLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(mailPassLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(mailDue)
+                    .addComponent(passin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+
+        payment.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        payment.setTitle("Payment Page");
+        payment.setMinimumSize(new java.awt.Dimension(500, 550));
+        payment.setResizable(false);
+        payment.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                paymentKeyPressed(evt);
+            }
+        });
+
+        jLabel44.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 24));
+        jLabel44.setText("PAYMENT");
+
+        jLabel45.setText("Name :");
+
+        jLabel46.setText("Phone Number :");
+
+        jLabel47.setText("Location :");
+
+        jPanel15.setBorder(javax.swing.BorderFactory.createTitledBorder("Payment Method"));
+        jPanel15.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPanel15MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanel15MouseExited(evt);
+            }
+        });
+
+        paymentMethod.add(payCheque);
+        payCheque.setText("Cheque");
+        payCheque.setName("Cheque"); // NOI18N
+        payCheque.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                payChequeMouseClicked(evt);
+            }
+        });
+
+        paymentMethod.add(payCard);
+        payCard.setText("Credit Card");
+        payCard.setName("Card"); // NOI18N
+        payCard.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                payCardMouseClicked(evt);
+            }
+        });
+
+        paymentMethod.add(payCash);
+        payCash.setText("Cash");
+        payCash.setName("Cash"); // NOI18N
+        payCash.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                payCashMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+        jPanel15.setLayout(jPanel15Layout);
+        jPanel15Layout.setHorizontalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(payCash)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
+                .addComponent(payCheque)
+                .addGap(91, 91, 91)
+                .addComponent(payCard)
+                .addContainerGap())
+        );
+        jPanel15Layout.setVerticalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(payCash)
+                    .addComponent(payCard)
+                    .addComponent(payCheque))
+                .addContainerGap())
+        );
+
+        payName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        payName.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        payPhone.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        payPhone.setText(" ");
+        payPhone.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        payLoc.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        payLoc.setText(" ");
+        payLoc.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel48.setText("Member Code :");
+
+        payMem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        payMem.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel49.setText("Enter Amount :");
+
+        payAmt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        payAmt.setText("250");
+
+        payLabel.setText("Enter Cheque Number:");
+
+        jLabel50.setText("Date of Payment :");
+
+        payDate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        payDate.setText(" ");
+        payDate.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        payBtn.setText("PAY NOW");
+        payBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                payBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel51.setText("AED");
+
+        num.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel58.setText("Email ID :");
+
+        payMail.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        payMail.setText(" ");
+        payMail.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout paymentLayout = new javax.swing.GroupLayout(payment.getContentPane());
+        payment.getContentPane().setLayout(paymentLayout);
+        paymentLayout.setHorizontalGroup(
+            paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator8, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
+            .addGroup(paymentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel45)
+                .addGap(77, 77, 77)
+                .addComponent(payName, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(paymentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel48)
+                .addGap(38, 38, 38)
+                .addComponent(payMem, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(paymentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel46)
+                    .addComponent(jLabel47)
+                    .addComponent(jLabel50))
+                .addGap(23, 23, 23)
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(payDate, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                    .addComponent(payLoc, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                    .addComponent(payPhone, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(paymentLayout.createSequentialGroup()
+                .addGap(156, 156, 156)
+                .addComponent(jLabel44)
+                .addContainerGap(171, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paymentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paymentLayout.createSequentialGroup()
+                        .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(paymentLayout.createSequentialGroup()
+                                .addComponent(jLabel49)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                                .addComponent(jLabel51))
+                            .addComponent(payLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(payAmt, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(num, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(payBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+            .addGroup(paymentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel58)
+                .addGap(66, 66, 66)
+                .addComponent(payMail, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        paymentLayout.setVerticalGroup(
+            paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paymentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel44)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(payName, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel45))
+                .addGap(18, 18, 18)
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(payMem, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel48))
+                .addGap(18, 18, 18)
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel46)
+                    .addComponent(payPhone))
+                .addGap(18, 18, 18)
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel47)
+                    .addComponent(payLoc))
+                .addGap(18, 18, 18)
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel50)
+                    .addComponent(payDate))
+                .addGap(18, 18, 18)
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel58)
+                    .addComponent(payMail))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel49)
+                    .addComponent(payAmt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel51))
+                .addGap(12, 12, 12)
+                .addGroup(paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(payBtn)
+                    .addComponent(payLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(num, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        paymentLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {payDate, payLoc, payMail, payName, payPhone});
+
+        payWin.setTitle("Payment Window");
+        payWin.setMinimumSize(new java.awt.Dimension(500, 350));
+        payWin.setResizable(false);
+        payWin.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                payWinWindowActivated(evt);
+            }
+        });
+
+        payTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Phone", "Location", "To Pay", "Pay Date"
+            }
+        ));
+        jScrollPane4.setViewportView(payTable);
+
+        payNw.setText("Pay Now");
+        payNw.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                payNwActionPerformed(evt);
+            }
+        });
+
+        sendMailPayment.setText("Send Mail");
+        sendMailPayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMailPaymentActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout payWinLayout = new javax.swing.GroupLayout(payWin.getContentPane());
+        payWin.getContentPane().setLayout(payWinLayout);
+        payWinLayout.setHorizontalGroup(
+            payWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+            .addGroup(payWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(payNw, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
+                .addComponent(sendMailPayment)
+                .addContainerGap())
+        );
+        payWinLayout.setVerticalGroup(
+            payWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(payWinLayout.createSequentialGroup()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(payWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(payNw)
+                    .addComponent(sendMailPayment))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        payHere.setTitle("PayHere");
+        payHere.setMinimumSize(new java.awt.Dimension(450, 260));
+        payHere.setResizable(false);
+
+        jLabel52.setFont(new java.awt.Font("Tahoma", 1, 18));
+        jLabel52.setText("Payment Page");
+
+        jLabel53.setText("Name :");
+
+        namePay.setEnabled(false);
+        namePay.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                namePayMouseClicked(evt);
+            }
+        });
+
+        jLabel54.setText("Member Code :");
+
+        memCode.setEnabled(false);
+        memCode.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                memCodeMouseClicked(evt);
+            }
+        });
+
+        jLabel55.setText("To Pay :");
+
+        toBePaid.setEnabled(false);
+
+        jPanel16.setBorder(javax.swing.BorderFactory.createTitledBorder("Load"));
+
+        byName.setText("By Name");
+        byName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                byNameActionPerformed(evt);
+            }
+        });
+
+        byCode.setText("By Code");
+
+        javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
+        jPanel16.setLayout(jPanel16Layout);
+        jPanel16Layout.setHorizontalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(byName)
+                    .addComponent(byCode))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+        jPanel16Layout.setVerticalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addComponent(byName)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(byCode))
+        );
+
+        payCheck.setText("Payment Received");
+        payCheck.setEnabled(false);
+        payCheck.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                payCheckMouseClicked(evt);
+            }
+        });
+
+        confirm.setText("Confirm Transaction");
+        confirm.setEnabled(false);
+        confirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confirmActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout payHereLayout = new javax.swing.GroupLayout(payHere.getContentPane());
+        payHere.getContentPane().setLayout(payHereLayout);
+        payHereLayout.setHorizontalGroup(
+            payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator9, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+            .addGroup(payHereLayout.createSequentialGroup()
+                .addGap(135, 135, 135)
+                .addComponent(jLabel52)
+                .addContainerGap(141, Short.MAX_VALUE))
+            .addGroup(payHereLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(payHereLayout.createSequentialGroup()
+                        .addGroup(payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel54)
+                            .addComponent(jLabel53)
+                            .addComponent(jLabel55))
+                        .addGap(18, 18, 18)
+                        .addGroup(payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(toBePaid)
+                            .addComponent(memCode)
+                            .addComponent(namePay, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)))
+                    .addComponent(payCheck))
+                .addGap(29, 29, 29)
+                .addGroup(payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(confirm)
+                    .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        payHereLayout.setVerticalGroup(
+            payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(payHereLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel52)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(payHereLayout.createSequentialGroup()
+                        .addGroup(payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel53)
+                            .addComponent(namePay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel54)
+                            .addComponent(memCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel55)
+                            .addComponent(toBePaid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
+                .addGroup(payHereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(payCheck)
+                    .addComponent(confirm))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        popup.setMaximumSize(new java.awt.Dimension(400, 600));
+        popup.setMinimumSize(new java.awt.Dimension(400, 600));
+
+        printFrame.setTitle("RECEIPT PRINT");
+        printFrame.setMinimumSize(new java.awt.Dimension(450, 350));
+        printFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                printFrameWindowActivated(evt);
+            }
+        });
+
+        jLabel57.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 24));
+        jLabel57.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel57.setText("Print Receipt");
+
+        printArea.setColumns(20);
+        printArea.setEditable(false);
+        printArea.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 18));
+        printArea.setLineWrap(true);
+        printArea.setRows(5);
+        printArea.setWrapStyleWord(true);
+        jScrollPane5.setViewportView(printArea);
+
+        printOk.setText("PRINT RECEIPT");
+        printOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printOkActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("CANCEL PRINTING");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout printFrameLayout = new javax.swing.GroupLayout(printFrame.getContentPane());
+        printFrame.getContentPane().setLayout(printFrameLayout);
+        printFrameLayout.setHorizontalGroup(
+            printFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator10, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addGroup(printFrameLayout.createSequentialGroup()
+                .addGap(106, 106, 106)
+                .addComponent(jLabel57)
+                .addContainerGap(127, Short.MAX_VALUE))
+            .addGroup(printFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(printOk)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
+                .addComponent(jButton4)
+                .addContainerGap())
+            .addGroup(printFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        printFrameLayout.setVerticalGroup(
+            printFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(printFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel57)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(printFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(printOk)
+                    .addComponent(jButton4))
+                .addContainerGap())
+        );
+
+        mailPass2.setTitle("Password");
+        mailPass2.setMinimumSize(new java.awt.Dimension(400, 80));
+        mailPass2.setModal(true);
+        mailPass2.setResizable(false);
+
+        payDue.setText("Enter Email Password");
+        payDue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                payDueActionPerformed(evt);
+            }
+        });
+
+        passin1.setMinimumSize(new java.awt.Dimension(400, 70));
+
+        javax.swing.GroupLayout mailPass2Layout = new javax.swing.GroupLayout(mailPass2.getContentPane());
+        mailPass2.getContentPane().setLayout(mailPass2Layout);
+        mailPass2Layout.setHorizontalGroup(
+            mailPass2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mailPass2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(payDue)
+                .addGap(18, 18, 18)
+                .addComponent(passin1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        mailPass2Layout.setVerticalGroup(
+            mailPass2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mailPass2Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(mailPass2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(payDue)
+                    .addComponent(passin1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+
+        fc.setCurrentDirectory(new java.io.File("C:\\Users\\KANISHKA\\Desktop"));
+        fc.setDialogTitle("CHOOSE IMAGE");
+
+        rateWin.setMinimumSize(new java.awt.Dimension(250, 170));
+        rateWin.setResizable(false);
+
+        jLabel59.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 24));
+        jLabel59.setText("RATE THE BOOK");
+
+        jLabel60.setText("Please Rate Your Book :");
+
+        rateBox.setFont(new java.awt.Font("Tahoma", 1, 14));
+        rateBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "    *", "   **", "  ***", " ****", "*****" }));
+
+        submitRate.setText("SUBMIT");
+        submitRate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitRateActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout rateWinLayout = new javax.swing.GroupLayout(rateWin.getContentPane());
+        rateWin.getContentPane().setLayout(rateWinLayout);
+        rateWinLayout.setHorizontalGroup(
+            rateWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rateWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel60)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(rateBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41))
+            .addGroup(rateWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel59)
+                .addContainerGap(27, Short.MAX_VALUE))
+            .addComponent(jSeparator11, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+            .addGroup(rateWinLayout.createSequentialGroup()
+                .addGap(78, 78, 78)
+                .addComponent(submitRate)
+                .addContainerGap(102, Short.MAX_VALUE))
+        );
+        rateWinLayout.setVerticalGroup(
+            rateWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rateWinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel59, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(rateWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel60)
+                    .addComponent(rateBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(submitRate)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Library Menu");
+        setBackground(new java.awt.Color(51, 204, 255));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setForeground(new java.awt.Color(51, 204, 255));
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
+
+        libraryPanel.setBackground(new java.awt.Color(51, 204, 255));
+        libraryPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Librarian", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 0, 51))); // NOI18N
+        libraryPanel.setForeground(new java.awt.Color(51, 204, 255));
+
+        memAdd.setMnemonic('a');
+        memAdd.setText("Add Member");
+        memAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                memAddActionPerformed(evt);
+            }
+        });
+
+        memRem.setMnemonic('u');
+        memRem.setText("Update Details");
+        memRem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                memRemActionPerformed(evt);
+            }
+        });
+
+        bookAdd.setText("Add Books");
+        bookAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bookAddActionPerformed(evt);
+            }
+        });
+
+        bookUpd.setText("Update Books");
+        bookUpd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bookUpdActionPerformed(evt);
+            }
+        });
+
+        memList.setMnemonic('l');
+        memList.setText("Member List");
+        memList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                memListActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout libraryPanelLayout = new javax.swing.GroupLayout(libraryPanel);
+        libraryPanel.setLayout(libraryPanelLayout);
+        libraryPanelLayout.setHorizontalGroup(
+            libraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(libraryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(memList)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+            .addGroup(libraryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(memAdd)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(libraryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(memRem)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(libraryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bookAdd)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(libraryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bookUpd)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        libraryPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bookAdd, bookUpd, memAdd, memList, memRem});
+
+        libraryPanelLayout.setVerticalGroup(
+            libraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(libraryPanelLayout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addComponent(memAdd)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(memRem)
+                .addGap(13, 13, 13)
+                .addComponent(memList)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bookAdd)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bookUpd)
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+
+        memberPanel.setBackground(new java.awt.Color(51, 204, 255));
+        memberPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Member", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 0, 51))); // NOI18N
+
+        searchBooksBtn.setText("Search Books");
+        searchBooksBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchBooksBtnActionPerformed(evt);
+            }
+        });
+
+        issueBooksBtn.setText("Issue Book");
+        issueBooksBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                issueBooksBtnActionPerformed(evt);
+            }
+        });
+
+        returnBooksBtn.setText("Return Book");
+        returnBooksBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnBooksBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout memberPanelLayout = new javax.swing.GroupLayout(memberPanel);
+        memberPanel.setLayout(memberPanelLayout);
+        memberPanelLayout.setHorizontalGroup(
+            memberPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(memberPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(memberPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(searchBooksBtn)
+                    .addComponent(issueBooksBtn)
+                    .addComponent(returnBooksBtn))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+
+        memberPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {issueBooksBtn, returnBooksBtn, searchBooksBtn});
+
+        memberPanelLayout.setVerticalGroup(
+            memberPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(memberPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(searchBooksBtn)
+                .addGap(11, 11, 11)
+                .addComponent(issueBooksBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(returnBooksBtn)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel14.setBackground(new java.awt.Color(51, 204, 255));
+        jPanel14.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Overdue Books", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 0, 51))); // NOI18N
+
+        overdue.setText("<html>\n<body>\n<center>Overdue\n<br> Books\n</center>\n</body>\n</html>");
+        overdue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                overdueActionPerformed(evt);
+            }
+        });
+
+        payDueBtn.setText("Payment Dues");
+        payDueBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                payDueBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(overdue, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                    .addComponent(payDueBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addComponent(overdue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(payDueBtn))
+        );
+
+        jLabel56.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cooltext470931761.png"))); // NOI18N
+        jLabel56.setText("jLabel56");
+
+        jMenu1.setText("File");
+
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem3.setText("Search Books");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Search Users");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+        jMenu1.add(jSeparator5);
+
+        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem5.setText("Issue Books");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem5);
+
+        jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem6.setText("Return Books");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem6);
+        jMenu1.add(jSeparator6);
+
+        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem7.setText("Exit");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem7);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+
+        jMenuItem8.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem8.setText("Add Member");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem8);
+
+        jMenuItem9.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem9.setText("Add Books");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem9);
+        jMenu2.add(jSeparator7);
+
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setText("Update Member Details");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
+        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem4.setText("Update Book Details");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem4);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(26, Short.MAX_VALUE)
+                .addComponent(libraryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(memberPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLabel56, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(47, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel56, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(memberPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(libraryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(29, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void memAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memAddBtnActionPerformed
+        String folderLocation = ("C:\\memberAdd");
+        File file1 = new File(folderLocation);
+        try {
+            if (file1.exists() == false) {
+                file1.mkdir();
+            }
+            FileWriter f = new FileWriter("C://memberAdd/newMember.txt");
+            BufferedWriter writer = new BufferedWriter(f);
+
+            try {
+                Class.forName("java.sql.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+                Statement stmt = con.createStatement();
+                stmt.executeUpdate("INSERT INTO user (name, phone, mob, location, datejoined, email, retDate, issued) VALUES('" + custName.getText() + "'," + custPhone.getText() + "," + custMob.getText() + ",'" + custLoc.getText() + "','" + custDate.getText() + "','" + email.getText() + "'," + "'5000-01-01'," + "0" + ");");
+
+                msg.showMessageDialog(null, "Member Added Successfully", "Member Added", 1);
+
+                f.append("Name :" + custName.getText());
+                writer.newLine();
+                f.append("Phone Number :" + custPhone.getText());
+                writer.newLine();
+                f.append("Date Added :" + custDate.getText());
+                writer.newLine();
+                f.append("Email :" + email.getText());
+                writer.newLine();
+                f.close();
+
+            } catch (Exception e) {
+                msg.showMessageDialog(null, "Error Writing to File" + '\n' + e, "Error!", 0);
+            }
+
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error Adding User" + '\n' + e, "Error!", 0);
+        }
+        addWin.dispose();
+        payment.setVisible(true);
+}//GEN-LAST:event_memAddBtnActionPerformed
+
+    private void loadRecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadRecActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM user WHERE name = '" + updName.getText() + "' OR memcode =" + updMem.getText() + ";";
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                String mno = rs.getString("memcode");
+                String name = rs.getString("name");
+                String loc = rs.getString("location");
+                String res = rs.getString("phone");
+                String mob = rs.getString("mob");
+                String mail = rs.getString("email");
+
+                updMem.setText(mno);
+                updName.setText(name);
+                updMob.setText(mob);
+                updRes.setText(res);
+                updLoc.setText(loc);
+                updEmail.setText(mail);
+
+                updMem.setEnabled(false);
+                updName.setEnabled(false);
+                updMob.setEnabled(true);
+                updRes.setEnabled(true);
+                updLoc.setEnabled(true);
+                updEmail.setEnabled(true);
+
+                updRec.setEnabled(true);
+                delRec.setEnabled(true);
+            } else {
+                msg.showMessageDialog(null, "Error!", "Error!", 0);
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_loadRecActionPerformed
+
+    private void updRecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updRecActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = ("UPDATE user SET name = '" + updName.getText() + "', phone = " + updRes.getText() + ", mob = " + updMob.getText() + ", location = '" + updLoc.getText() + "', email ='" + updEmail.getText() + "' WHERE name = '" + updName.getText() + "';");
+            String query2 = ("UPDATE payment SET name = '" + updName.getText() + "', phone = " + updRes.getText() + ", location = '" + updLoc.getText() + "', paymail ='" + updEmail.getText() + "' WHERE name = '" + updName.getText() + "';");
+            stmt.executeUpdate(query);
+            stmt.executeUpdate(query2);
+            msg.showMessageDialog(null, "VALUES UPDATED", "VALUES UPDATED", 1);
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+}//GEN-LAST:event_updRecActionPerformed
+
+    private void delRecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delRecActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "DELETE FROM user WHERE memcode = '" + updMem.getText() + "' AND issued = 0;";
+            stmt.executeUpdate(query);
+            String query2 = "DELETE FROM payment WHERE memcode ='" + updMem.getText() + "';";
+            stmt.executeUpdate(query2);
+            msg.showMessageDialog(null, "VALUES DELETED", "VALUES DELETED", 1);
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+}//GEN-LAST:event_delRecActionPerformed
+
+    private void memAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memAddActionPerformed
+        addWin.setVisible(true);
+    }//GEN-LAST:event_memAddActionPerformed
+
+    private void memRemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memRemActionPerformed
+        updWin.setVisible(true);
+    }//GEN-LAST:event_memRemActionPerformed
+
+    private void memListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memListActionPerformed
+        memWin.setVisible(true);
+    }//GEN-LAST:event_memListActionPerformed
+
+    private void bookAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookAddActionPerformed
+        addBookWin.setVisible(true);
+    }//GEN-LAST:event_bookAddActionPerformed
+
+    private void addBookBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addBookBtnMouseEntered
+        try {
+            String codeN = bkNameIn.getText(0, 3);
+            String codeA = authNameIn.getText(0, 3);
+            bkCodeIn.setText(codeN.toUpperCase() + "/" + codeA.toUpperCase());
+
+        } catch (Exception e) {
+        }
+}//GEN-LAST:event_addBookBtnMouseEntered
+
+    private void addBookBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookBtnActionPerformed
+        int qty = Integer.parseInt((String) bkQty.getSelectedItem());
+        int i = 1;
+        int assccode = Integer.parseInt(asscCodeIn.getText());
+
+        int returnVal = fc.showOpenDialog(LibraryProgram.this);
+        FileInputStream fis;
+        File image = null;
+        String r = bkNameIn.getText();
+
+        do {
+
+            try {
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+                Statement stmt = con.createStatement();
+                stmt.executeUpdate("INSERT INTO books (name, author, bkcode, available, count, assc, total, stars) VALUES('" + bkNameIn.getText() + "','" + authNameIn.getText() + "','" + bkCodeIn.getText() + "', 1, 0," + assccode + ", 1, 1);");
+                msg.showMessageDialog(null, "Book Added!", "Book Added", 1);
+            } catch (Exception e) {
+                msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+            }
+            i++;
+            assccode++;
+        } while (i < qty);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            image = fc.getSelectedFile();
+        } else {
+            System.exit(0);
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            PreparedStatement psmnt = con.prepareStatement("INSERT INTO image(pic, name)" + "values(?,?)");
+            fis = new FileInputStream(image);
+            psmnt.setBinaryStream(1, (InputStream) fis, (int) (image.length()));
+            psmnt.setString(2, r);
+
+            int s = psmnt.executeUpdate();
+            if (s > 0) {
+                msg.showMessageDialog(null, "UPLOAD SUCCESSFUL" + '\n', "SUCCESS!", 0);
+            } else {
+                msg.showMessageDialog(null, "SUCCESSFUL" + '\n', "ERROR", 0);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        addBookWin.dispose();
+    }//GEN-LAST:event_addBookBtnActionPerformed
+
+    private void allSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allSearchActionPerformed
+        DefaultTableModel model = (DefaultTableModel) userTable.getModel();
+        int rows = model.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                model.removeRow(0);
+            }
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM user ORDER BY name;";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String memno = rs.getString("memcode");
+                String name = rs.getString("name");
+                String phone = rs.getString("phone");
+                String mob = rs.getString("mob");
+                String loc = rs.getString("location");
+                String mail = rs.getString("email");
+
+
+                model.addRow(new Object[]{memno, name, phone, mob, loc, mail});
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_allSearchActionPerformed
+
+    private void bookUpdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookUpdActionPerformed
+        updBookWin.setVisible(true);
+}//GEN-LAST:event_bookUpdActionPerformed
+
+    private void addBookWinWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_addBookWinWindowActivated
+        bkNameIn.setText("");
+        authNameIn.setText("");
+        bkCodeIn.setText("");
+    }//GEN-LAST:event_addBookWinWindowActivated
+
+    private void loadBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBookActionPerformed
+        bkname = bkName.getText();
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+
+            String query = "SELECT * FROM books WHERE name = '" + bkName.getText() + "';";
+
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                String bID = rs.getString("id");
+                String name = rs.getString("name");
+                String auth = rs.getString("author");
+                String code = rs.getString("bkcode");
+                String assc = rs.getString("assc");
+
+                bkIdIn.setText(bID);
+                bookCode.setText(code);
+                bkName.setText(name);
+                authorName.setText(auth);
+                asscCode.setText(assc);
+
+                bkIdIn.setEnabled(false);
+                bkName.setEnabled(true);
+                authorName.setEnabled(true);
+                asscCode.setEnabled(true);
+
+                updBook.setEnabled(true);
+                remBook.setEnabled(true);
+            } else {
+                msg.showMessageDialog(null, "Error!", "Error!", 0);
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_loadBookActionPerformed
+
+    private void updBookWinWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_updBookWinWindowActivated
+        bkIdIn.setText("");
+        bookCode.setText("");
+        bkName.setText("");
+        authorName.setText("");
+        asscCode.setText("");
+}//GEN-LAST:event_updBookWinWindowActivated
+
+    private void updBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updBookActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = ("UPDATE books SET name = '" + bkName.getText() + "', author = '" + authorName.getText() + "', assc = " + asscCode.getText() + " WHERE id = " + bkIdIn.getText() + ";");
+            String query2 = ("UPDATE image SET name = '" + bkName.getText() + "' WHERE name = '" + bkname + "';");
+            stmt.executeUpdate(query);
+            stmt.executeUpdate(query2);
+            msg.showMessageDialog(null, "VALUES UPDATED", "VALUES UPDATED", 1);
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+
+
+    }//GEN-LAST:event_updBookActionPerformed
+
+    private void updBookMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updBookMouseEntered
+        try {
+            String codeN1 = bkName.getText(0, 3);
+            String codeA1 = authorName.getText(0, 3);
+            bookCode.setText(codeN1.toUpperCase() + "/" + codeA1.toUpperCase());
+
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_updBookMouseEntered
+
+    private void searchBooksBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBooksBtnActionPerformed
+        bookSearch.setVisible(true);
+}//GEN-LAST:event_searchBooksBtnActionPerformed
+
+    private void searchClrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchClrActionPerformed
+        DefaultTableModel bkmodel = (DefaultTableModel) bkTable.getModel();
+        int rows = bkmodel.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                bkmodel.removeRow(0);
+            }
+        }
+
+        searchCrit.setSelectedIndex(searchCrit.getSelectedIndex());
+        searchText.setText("");
+    }//GEN-LAST:event_searchClrActionPerformed
+
+    private void issueBooksBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_issueBooksBtnActionPerformed
+        issueName.setText("");
+        issueWin.setVisible(true);
+}//GEN-LAST:event_issueBooksBtnActionPerformed
+
+    private void issueNameLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_issueNameLoadActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+
+            String query = "SELECT * FROM books WHERE name = '" + issueName.getText() + "' AND available = 1;";
+
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                String bID = rs.getString("id");
+                String name = rs.getString("name");
+                String auth = rs.getString("author");
+                String code = rs.getString("bkcode");
+
+                issueName.setText(name);
+                issueCode.setText(code);
+                issueAuthor.setText(auth);
+                issueId.setText(bID);
+
+                issueBtn.setEnabled(true);
+
+            } else {
+                msg.showMessageDialog(null, "Book Unavailable!", "Error!", 0);
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+}//GEN-LAST:event_issueNameLoadActionPerformed
+
+    private void issueCodeLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_issueCodeLoadActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+
+            String query = "SELECT * FROM books WHERE bkcode = '" + issueCode.getText() + "' AND available = 1;";
+
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                String bID = rs.getString("id");
+                String name = rs.getString("name");
+                String auth = rs.getString("author");
+                String code = rs.getString("bkcode");
+
+                issueName.setText(name);
+                issueCode.setText(code);
+                issueAuthor.setText(auth);
+                issueId.setText(bID);
+
+                issueBtn.setEnabled(true);
+
+            } else {
+                msg.showMessageDialog(null, "Book Unavailable!", "Error!", 0);
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_issueCodeLoadActionPerformed
+
+    private void issueBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_issueBtnActionPerformed
+        String DATE_FORMAT = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 7);
+        String retDate = sdf.format(cal.getTime());
+
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+
+            String query = ("UPDATE books SET available = 0 where name = '" + issueName.getText() + "' AND id = '" + issueId.getText() + "';");
+            stmt.executeUpdate(query);
+
+            String query2 = ("UPDATE books SET count = count + 1 where name = '" + issueName.getText() + "';");
+            stmt.executeUpdate(query2);
+
+            String query3 = ("UPDATE user SET retDate ='" + retDate + "' where name = '" + issueMemName.getText() + "';");
+            stmt.executeUpdate(query3);
+
+            String query4 = ("UPDATE user SET issued = 1 where name = '" + issueMemName.getText() + "';");
+            stmt.executeUpdate(query4);
+
+            msg.showMessageDialog(null, "BOOK ISSUED!", "BOOK ISSUED", 1);
+            msg.showMessageDialog(null, "Please Return Book Within One Week:" + '\n' + retDate, "Date Of Return", 1);
+            issueWin.dispose();
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_issueBtnActionPerformed
+
+    private void returnNameLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnNameLoadActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+
+            String query = "SELECT * FROM books WHERE name = '" + returnName.getText() + "' AND available = 0;";
+
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                String bID = rs.getString("id");
+                String name = rs.getString("name");
+                String auth = rs.getString("author");
+                String code = rs.getString("bkcode");
+
+                returnName.setText(name);
+                rateName = name;
+                returnCode.setText(code);
+                returnAuthor.setText(auth);
+                returnId.setText(bID);
+                rateId = bID;
+
+                returnBtn.setEnabled(true);
+
+            } else {
+                msg.showMessageDialog(null, "Book Unavailable!", "Error!", 0);
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+}//GEN-LAST:event_returnNameLoadActionPerformed
+
+    private void returnCodeLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnCodeLoadActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+
+            String query = "SELECT * FROM books WHERE bkcode = '" + returnCode.getText() + "' AND available = 0;";
+
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                String bID = rs.getString("id");
+                String name = rs.getString("name");
+                String auth = rs.getString("author");
+                String code = rs.getString("bkcode");
+
+                returnName.setText(name);
+                returnCode.setText(code);
+                returnAuthor.setText(auth);
+                returnId.setText(bID);
+
+                returnBtn.setEnabled(true);
+
+                String query2 = "UPDATE books SET available = 1 WHERE name ='" + " " + name + "';";
+                stmt.executeUpdate(query2);
+
+
+            } else {
+                msg.showMessageDialog(null, "Book Unavailable!", "Error!", 0);
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+}//GEN-LAST:event_returnCodeLoadActionPerformed
+
+    private void returnBooksBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnBooksBtnActionPerformed
+        returnWin.setVisible(true);
+}//GEN-LAST:event_returnBooksBtnActionPerformed
+
+    private void returnBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnBtnActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+
+            String query = ("UPDATE books SET available = 1 where name = '" + returnName.getText() + "' AND id = '" + returnId.getText() + "' AND available = 0;");
+            stmt.executeUpdate(query);
+
+            String query2 = ("UPDATE user SET issued = 0 where name = '" + returnMemName.getText() + "';");
+            stmt.executeUpdate(query2);
+
+            String query3 = ("UPDATE user SET retDate = '5000-01-01' where name = '" + returnMemName.getText() + "';");
+            stmt.executeUpdate(query3);
+
+            msg.showMessageDialog(null, "BOOK RETURNED!", "BOOK RETURNED", 1);
+            rateWin.setVisible(true);
+            returnWin.setVisible(false);
+
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_returnBtnActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        bookSearch.setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        memWin.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        issueWin.setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        returnWin.setVisible(true);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        addBookWin.setVisible(true);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        addWin.setVisible(true);
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        updWin.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        updBookWin.setVisible(true);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem55ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem55ActionPerformed
+        bookSearch.setVisible(true);
+    }//GEN-LAST:event_jMenuItem55ActionPerformed
+
+    private void jMenuItem56ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem56ActionPerformed
+        memWin.setVisible(true);
+    }//GEN-LAST:event_jMenuItem56ActionPerformed
+
+    private void jMenuItem57ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem57ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem57ActionPerformed
+
+    private void jMenuItem58ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem58ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem58ActionPerformed
+
+    private void jMenuItem60ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem60ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem60ActionPerformed
+
+    private void jMenuItem61ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem61ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem61ActionPerformed
+
+    private void jMenuItem62ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem62ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem62ActionPerformed
+
+    private void jMenuItem63ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem63ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem63ActionPerformed
+
+    private void jMenuItem64ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem64ActionPerformed
+        bookSearch.setVisible(true);
+    }//GEN-LAST:event_jMenuItem64ActionPerformed
+
+    private void jMenuItem65ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem65ActionPerformed
+        memWin.setVisible(true);
+    }//GEN-LAST:event_jMenuItem65ActionPerformed
+
+    private void jMenuItem66ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem66ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem66ActionPerformed
+
+    private void jMenuItem67ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem67ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem67ActionPerformed
+
+    private void jMenuItem69ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem69ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem69ActionPerformed
+
+    private void jMenuItem70ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem70ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem70ActionPerformed
+
+    private void jMenuItem71ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem71ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem71ActionPerformed
+
+    private void jMenuItem72ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem72ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem72ActionPerformed
+
+    private void jMenuItem73ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem73ActionPerformed
+        bookSearch.setVisible(true);
+    }//GEN-LAST:event_jMenuItem73ActionPerformed
+
+    private void jMenuItem74ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem74ActionPerformed
+        memWin.setVisible(true);
+    }//GEN-LAST:event_jMenuItem74ActionPerformed
+
+    private void jMenuItem75ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem75ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem75ActionPerformed
+
+    private void jMenuItem76ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem76ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem76ActionPerformed
+
+    private void jMenuItem78ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem78ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem78ActionPerformed
+
+    private void jMenuItem79ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem79ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem79ActionPerformed
+
+    private void jMenuItem80ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem80ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem80ActionPerformed
+
+    private void jMenuItem81ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem81ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem81ActionPerformed
+
+    private void issueWinWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_issueWinWindowActivated
+        issueCode.setText("");
+        issueAuthor.setText("");
+        issueId.setText("");
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int date = cal.get(Calendar.DATE);
+        int year = cal.get(Calendar.YEAR);
+        issueDate.setText("" + year + "-" + month + "-" + date);
+    }//GEN-LAST:event_issueWinWindowActivated
+
+    private void returnWinWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_returnWinWindowActivated
+        returnName.setText("");
+        returnCode.setText("");
+        returnAuthor.setText("");
+        returnId.setText("");
+    }//GEN-LAST:event_returnWinWindowActivated
+
+    private void issueMemLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_issueMemLoadActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+
+            String query = "SELECT * FROM user WHERE name = '" + issueMemName.getText() + "' AND memcode =" + issueMemNum.getText() + ";";
+
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                String ID = rs.getString("memcode");
+                String name = rs.getString("name");
+
+                issueMemName.setText(name);
+                issueMemNum.setText(ID);
+
+                issueNameLoad.setEnabled(true);
+                issueCodeLoad.setEnabled(true);
+
+            } else {
+                msg.showMessageDialog(null, "Member Not Found!", "Member Not Found!", 0);
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+}//GEN-LAST:event_issueMemLoadActionPerformed
+
+    private void returnMemLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnMemLoadActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+
+            String query = "SELECT * FROM user WHERE name = '" + returnMemName.getText() + "';";
+
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                String ID = rs.getString("memcode");
+                String name = rs.getString("name");
+
+                returnMemName.setText(name);
+                returnMemNum.setText(ID);
+
+                returnNameLoad.setEnabled(true);
+                returnCodeLoad.setEnabled(true);
+
+            } else {
+                msg.showMessageDialog(null, "Member Not Found!", "Member Not Found!", 0);
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+}//GEN-LAST:event_returnMemLoadActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void popSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popSearchActionPerformed
+        DefaultTableModel bkmodel = (DefaultTableModel) bkTable.getModel();
+        int rows = bkmodel.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                bkmodel.removeRow(0);
+            }
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM books where available = 1 ORDER BY count DESC;";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String id = rs.getString("assc");
+                String name = rs.getString("name");
+                String auth = rs.getString("author");
+                String code = rs.getString("bkcode");
+                String status = rs.getString("available");
+                String getTotal = rs.getString("total");
+                String getStars = rs.getString("stars");
+
+                String stat;
+                if (status.contentEquals("1")) {
+                    stat = "AVAILABLE";
+                } else {
+                    stat = "NOT AVAILABLE";
+                }
+
+                double rating = Integer.parseInt(getStars) / Integer.parseInt(getTotal);
+                DecimalFormat twoDForm = new DecimalFormat("#.##");
+                String rate = " " + Double.valueOf(twoDForm.format(rating));
+
+                bkmodel.addRow(new Object[]{id, code, name, auth, stat, rate});
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_popSearchActionPerformed
+
+    private void addWinWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_addWinWindowActivated
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT max(memcode) + 1 from user;";
+            ResultSet rs = stmt.executeQuery(query);
+            custNum.setText(rs.getString("max(memcode) + 1"));
+        } catch (Exception e) {
+        }
+
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int date = cal.get(Calendar.DATE);
+        int year = cal.get(Calendar.YEAR);
+        custDate.setText("" + year + "-" + month + "-" + date);
+
+    }//GEN-LAST:event_addWinWindowActivated
+
+    private void remBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_remBookActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "DELETE FROM books WHERE name = '" + bkName.getText() + "';";
+            String query2 = "DELETE FROM image WHERE name = '" + bkName.getText() + "';";
+
+            stmt.executeUpdate(query);
+            stmt.executeUpdate(query2);
+            msg.showMessageDialog(null, "BOOK DELETED", "BOOK DELETED", 1);
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_remBookActionPerformed
+
+    private void booksIssuedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_booksIssuedActionPerformed
+        DefaultTableModel bkmodel = (DefaultTableModel) bkTable.getModel();
+        int rows = bkmodel.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                bkmodel.removeRow(0);
+            }
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM books where available = 0 ORDER BY name ;";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String id = rs.getString("assc");
+                String name = rs.getString("name");
+                String auth = rs.getString("author");
+                String code = rs.getString("bkcode");
+                String status = rs.getString("available");
+
+                String stat;
+                if (status.contentEquals("1")) {
+                    stat = "AVAILABLE";
+                } else {
+                    stat = "NOT AVAILABLE";
+                }
+
+                bkmodel.addRow(new Object[]{id, code, name, auth, stat});
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_booksIssuedActionPerformed
+
+    private void overdueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_overdueActionPerformed
+        overdueWin.setVisible(true);
+    }//GEN-LAST:event_overdueActionPerformed
+
+    private void overdueWinWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_overdueWinWindowActivated
+        DefaultTableModel duemodel = (DefaultTableModel) overdueTbl.getModel();
+        int rows = duemodel.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                duemodel.removeRow(0);
+            }
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM user where retDate < sysDate() AND issued = 1 ORDER BY name ;";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String date = rs.getString("retDate");
+                String name = rs.getString("name");
+                String phone = rs.getString("phone");
+                String mail = rs.getString("email");
+
+
+                duemodel.addRow(new Object[]{name, date, phone, mail});
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_overdueWinWindowActivated
+
+    private void sendMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMailActionPerformed
+        mailPass.setVisible(true);
+}//GEN-LAST:event_sendMailActionPerformed
+
+    private void mailDueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mailDueActionPerformed
+        String passtxt = new String(passin.getPassword());
+        mailPass.setVisible(false);
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM user where retDate < sysDate() AND issued = 1 ORDER BY name ;";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String date = rs.getString("retDate");
+                String name = rs.getString("name");
+                String phone = rs.getString("phone");
+                String mail = rs.getString("email");
+
+                Properties properties = new Properties();
+
+                properties.setProperty("mail.smtp.host", "smtp.gmail.com");
+
+                properties.setProperty("mail.smtp.auth", "true");
+
+                properties.put("mail.smtp.starttls.enable", "true");
+
+                Session session = Session.getDefaultInstance(properties, null);
+
+                MimeMessage message = new MimeMessage(session);
+
+                try {
+
+                    message.setFrom(new InternetAddress("library@institution.com"));
+
+                    message.addRecipient(RecipientType.TO, new InternetAddress(mail));
+
+                    message.setSubject("Unreturned Book");
+
+                    message.setText("Dear Sir," + '\n' + "You," + " " + name + " " + "has an unreturned library book." + '\n' + "Please return it immediately.");
+
+                    Transport transport = session.getTransport("smtp");
+                    transport.connect("smtp.gmail.com", "kanishkaganguly2002@gmail.com ", passtxt);
+
+                    transport.sendMessage(message, message.getAllRecipients());
+
+                    msg.showMessageDialog(null, "Mail Sent Successfully", "MAIL SENT", 1);
+
+
+                } catch (AddressException e) {
+
+                    msg.showMessageDialog(null, e, "ERROR", 0);
+
+                }
+
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_mailDueActionPerformed
+
+    private void searchBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBooksActionPerformed
+        String search = searchCrit.getSelectedItem().toString().toLowerCase();
+        bkTable.setAutoCreateRowSorter(true);
+        String select = new String(searchText.getText());
+
+        if (searchCrit.getSelectedItem().toString().equals("Book Code")) {
+            search = "bkcode";
+            select = new String(searchText.getText());
+        }
+
+        if (searchCrit.getSelectedItem().toString().equals("Assc. No.")) {
+            search = "assc";
+            select = new String(searchText.getText());
+        }
+
+        if (searchCrit.getSelectedItem().toString().equals("Search :")) {
+            search = "name";
+            select = new String("");
+        }
+
+        if (searchCrit.getSelectedItem().toString().equals("Name")) {
+            search = "name";
+            select = new String(searchText.getText());
+        }
+
+
+        DefaultTableModel bkmodel = (DefaultTableModel) bkTable.getModel();
+        int rows = bkmodel.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                bkmodel.removeRow(0);
+            }
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM books where available = 1 AND " + " " + search + " " + "like" + " " + "'" + select + "%' ORDER BY" + " " + search + ";";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String id = rs.getString("assc");
+                String name = rs.getString("name");
+                String auth = rs.getString("author");
+                String code = rs.getString("bkcode");
+                String status = rs.getString("available");
+                String getTotal = rs.getString("total");
+                String getStars = rs.getString("stars");
+
+                String stat;
+                if (status.contentEquals("1")) {
+                    stat = "AVAILABLE";
+                } else {
+                    stat = "NOT";
+                }
+
+                double rating = Integer.parseInt(getStars) / Integer.parseInt(getTotal);
+                DecimalFormat twoDForm = new DecimalFormat("#.##");
+                String rate = " " + Double.valueOf(twoDForm.format(rating));
+
+                bkmodel.addRow(new Object[]{id, code, name, auth, stat, rate});
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+}//GEN-LAST:event_searchBooksActionPerformed
+
+    private void searchBooksMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchBooksMouseEntered
+        if (searchCrit.getSelectedItem().toString().equals(" ")) {
+            searchBooks.setEnabled(false);
+        } else {
+            searchBooks.setEnabled(true);
+        }
+
+    }//GEN-LAST:event_searchBooksMouseEntered
+
+    private void searchTextMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchTextMouseEntered
+        if (searchCrit.getSelectedItem().toString().equals("Search :")) {
+            searchText.setEnabled(false);
+        } else {
+            searchText.setEnabled(true);
+        }
+
+    }//GEN-LAST:event_searchTextMouseEntered
+
+    private void searchClr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchClr1ActionPerformed
+        DefaultTableModel bkmodel = (DefaultTableModel) userTable.getModel();
+        int rows = bkmodel.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                bkmodel.removeRow(0);
+            }
+        }
+
+        searchTextM.setText("");
+        searchCritM.setSelectedIndex(0);
+    }//GEN-LAST:event_searchClr1ActionPerformed
+
+    private void searchMemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchMemActionPerformed
+        String search = searchCritM.getSelectedItem().toString().toLowerCase();
+
+        String select = new String(searchTextM.getText());
+
+        if (searchCritM.getSelectedItem().toString().equals("Code")) {
+            search = "memcode";
+            select = new String(searchTextM.getText());
+        }
+
+        if (searchCritM.getSelectedItem().toString().equals("Search :")) {
+            search = "name";
+            select = new String("");
+        }
+
+        if (searchCritM.getSelectedItem().toString().equals("Name")) {
+            search = "name";
+            select = new String(searchTextM.getText());
+        }
+
+
+        DefaultTableModel bkmodel = (DefaultTableModel) userTable.getModel();
+        int rows = bkmodel.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                bkmodel.removeRow(0);
+            }
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM user where" + " " + search + " " + "like" + " " + "'%" + select + "%' ORDER BY" + " " + search + ";";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String id = rs.getString("memcode");
+                String name = rs.getString("name");
+                String auth = rs.getString("phone");
+                String code = rs.getString("mob");
+                String loc = rs.getString("location");
+                String mail = rs.getString("email");
+
+
+                bkmodel.addRow(new Object[]{id, name, auth, code, loc, mail});
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_searchMemActionPerformed
+
+    private void searchTextMMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchTextMMouseEntered
+        if (searchCritM.getSelectedItem().toString().equals("Search :")) {
+            searchTextM.setEnabled(false);
+        } else {
+            searchTextM.setEnabled(true);
+        }
+    }//GEN-LAST:event_searchTextMMouseEntered
+
+    private void searchMemMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMemMouseEntered
+        if (searchCritM.getSelectedItem().toString().equals(" ")) {
+            searchMem.setEnabled(false);
+        } else {
+            searchMem.setEnabled(true);
+        }
+    }//GEN-LAST:event_searchMemMouseEntered
+
+    private void searchBooksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchBooksMouseClicked
+        Toolkit.getDefaultToolkit().beep();
+    }//GEN-LAST:event_searchBooksMouseClicked
+
+    private void memAddBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_memAddBtnMouseEntered
+        if (email.getText().contains("@") && (email.getText().contains(".com"))) {
+        } else {
+            msg.showMessageDialog(null, "Enter Valid Email", "Error", 0);
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * from user;";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String memcodemax = rs.getString("memcode");
+
+                int mem = Integer.parseInt(memcodemax);
+                int memm;
+                if (memcodemax.isEmpty()) {
+                    memm = 1;
+                } else {
+                    memm = mem + 1;
+                }
+                custNum.setText("" + memm);
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_memAddBtnMouseEntered
+
+    private void payChequeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payChequeMouseClicked
+        if (payCheque.isSelected() == true) {
+            payLabel.setText("Enter Cheque Number:");
+            num.setVisible(true);
+            num.setEnabled(true);
+        }
+    }//GEN-LAST:event_payChequeMouseClicked
+
+    private void payCardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payCardMouseClicked
+        if (payCard.isSelected() == true) {
+            payLabel.setText("Enter Card Number:");
+            num.setVisible(true);
+            num.setEnabled(true);
+        }
+    }//GEN-LAST:event_payCardMouseClicked
+
+    private void payCashMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payCashMouseClicked
+        if (payCash.isSelected() == true) {
+            num.setVisible(false);
+            payLabel.setText("");
+            num.setVisible(false);
+            num.setEnabled(false);
+        }
+    }//GEN-LAST:event_payCashMouseClicked
+
+    private void payBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payBtnActionPerformed
+        String DATE_FORMAT = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 1);
+        String topayDate = sdf.format(cal.getTime());
+
+        String type = null;
+        int val;
+        if (payCard.isSelected() == true) {
+            type = (payCard.getName());
+        }
+        if (payCash.isSelected() == true) {
+            type = (payCash.getName());
+        }
+        if (payCheque.isSelected() == true) {
+            type = (payCheque.getName());
+        }
+        String name = new String(payName.getText());
+        String memcode = new String(payMem.getText());
+        String phone = new String(payPhone.getText());
+        String location = new String(payLoc.getText());
+        String date = new String(payDate.getText());
+        String mailid = new String(payMail.getText());
+
+        int amt = Integer.parseInt(payAmt.getText());
+
+        if (num.isVisible() == true) {
+            val = Integer.parseInt(num.getText());
+        } else {
+            val = 0;
+        }
+
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate("INSERT INTO payment (name, memcode, phone, location, type, amt, num, paydate, paid, topay, paymail) VALUES('" + name + "'," + memcode + "," + phone + ",'" + location + "','" + type + "'," + amt + "," + val + ",'" + date + "'," + "1,'" + topayDate + "', '" + mailid + "');");
+
+            msg.showMessageDialog(null, "Member Paid Successfully", "Member Paid", 1);
+            payment.setVisible(false);
+            printFrame.setVisible(true);
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error Paying Fees" + '\n' + e, "Error!", 0);
+        }
+
+    }//GEN-LAST:event_payBtnActionPerformed
+
+    private void updWinWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_updWinWindowActivated
+        updMem.setText("");
+    }//GEN-LAST:event_updWinWindowActivated
+
+    private void payDueBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payDueBtnActionPerformed
+        payWin.setVisible(true);
+    }//GEN-LAST:event_payDueBtnActionPerformed
+
+    private void payNwActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payNwActionPerformed
+        payHere.setVisible(true);
+}//GEN-LAST:event_payNwActionPerformed
+
+    private void namePayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_namePayMouseClicked
+        namePay.setEnabled(true);
+        memCode.setEnabled(false);
+        byCode.setEnabled(false);
+        byName.setEnabled(true);
+    }//GEN-LAST:event_namePayMouseClicked
+
+    private void memCodeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_memCodeMouseClicked
+        memCode.setEnabled(true);
+        namePay.setEnabled(false);
+        byName.setEnabled(false);
+        byCode.setEnabled(true);
+}//GEN-LAST:event_memCodeMouseClicked
+
+    private void byNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_byNameActionPerformed
+        try {
+            Class.forName("java.sql.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = conn.createStatement();
+            String query = "SELECT * FROM payment WHERE name ='" + namePay.getText() + "' AND paid = 0;";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String names = rs.getString("name");
+                String topay = rs.getString("amt");
+
+                namePay.setText(names);
+                toBePaid.setText(topay);
+            }
+
+            String query2 = "SELECT * from user WHERE name='" + namePay.getText() + "';";
+            ResultSet rs1 = stmt.executeQuery(query2);
+
+            while (rs1.next()) {
+                String code = rs1.getString("memcode");
+
+                memCode.setText(code);
+            }
+
+            memCode.setEnabled(true);
+            memCode.setEditable(false);
+            toBePaid.setEnabled(true);
+            toBePaid.setEditable(false);
+            payCheck.setEnabled(true);
+
+            if (toBePaid.getText().isEmpty()) {
+
+                confirm.setEnabled(false);
+            }
+
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "ERROR!" + " " + e, "ERROR", 0);
+        }
+    }//GEN-LAST:event_byNameActionPerformed
+
+    private void payWinWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_payWinWindowActivated
+        String name = null;
+        DefaultTableModel paymodel = (DefaultTableModel) payTable.getModel();
+        int rows = paymodel.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                paymodel.removeRow(0);
+            }
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = conn.createStatement();
+            String query = "SELECT * FROM payment WHERE paid = 0 ORDER BY name;";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                name = rs.getString("name");
+                String phone = rs.getString("phone");
+                String loc = rs.getString("location");
+                String topay = rs.getString("amt");
+                String paydate = rs.getString("topay");
+
+                paymodel.addRow(new Object[]{name, phone, loc, topay, paydate});
+
+            }
+
+
+        } catch (Exception e) {
+        }
+        if (payTable.getRowCount() == 0) {
+            payNw.setEnabled(false);
+        } else {
+            payNw.setEnabled(true);
+        }
+    }//GEN-LAST:event_payWinWindowActivated
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        try {
+            Class.forName("java.sql.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = conn.createStatement();
+            String query2 = "UPDATE payment SET paid = 0 WHERE topay < sysDate();";
+            stmt.executeUpdate(query2);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_formWindowActivated
+
+    private void payCheckMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payCheckMouseClicked
+        if (payCheck.isSelected()) {
+            confirm.setEnabled(true);
+        } else {
+            confirm.setEnabled(false);
+        }
+    }//GEN-LAST:event_payCheckMouseClicked
+
+    private void confirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmActionPerformed
+        String DATE_FORMAT = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        Calendar cal = Calendar.getInstance();
+
+        cal.add(Calendar.MONTH, 1);
+        String topayDate = sdf.format(cal.getTime());
+
+        String type = null;
+
+        try {
+            Class.forName("java.sql.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = conn.createStatement();
+
+            String query1 = "UPDATE payment SET paid = 1 WHERE name = '" + namePay.getText() + "';";
+            String query2 = "UPDATE payment SET paydate = sysDate() WHERE name = '" + namePay.getText() + "';";
+            String query3 = "UPDATE payment SET topay = '" + topayDate + "' WHERE name = '" + namePay.getText() + "';";
+            stmt.executeUpdate(query1);
+            stmt.executeUpdate(query2);
+            stmt.executeUpdate(query3);
+
+            msg.showMessageDialog(null, "MEMBER PAID SUCCESSFULLY!", "MEMBER PAID", 1);
+
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "ERROR" + " " + e, "ERROR!", 0);
+        }
+    }//GEN-LAST:event_confirmActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        updMem.setText("");
+        updName.setText("");
+        updMob.setText("");
+        updRes.setText("");
+        updLoc.setText("");
+        updEmail.setText("");
+
+        updRec.setEnabled(false);
+        delRec.setEnabled(false);
+        updMem.setEnabled(true);
+        updName.setEnabled(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jPanel15MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel15MouseEntered
+        payment.requestFocus();
+        payName.setText(custName.getText());
+        payPhone.setText(custPhone.getText());
+        payLoc.setText(custLoc.getText());
+        payDate.setText(custDate.getText());
+        payMail.setText(email.getText());
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM user where name ='" + payName.getText() + "';";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String id = rs.getString("memcode");
+                payMem.setText(id);
+            }
+
+        } catch (Exception e) {
+        }
+
+    }//GEN-LAST:event_jPanel15MouseEntered
+
+    private void jPanel15MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel15MouseExited
+        if (payCheque.isSelected() == true) {
+            payLabel.setText("Enter Cheque Number:");
+            num.setVisible(true);
+            num.setEnabled(true);
+            num.setEditable(true);
+            num.requestFocus();
+        }
+        if (payCard.isSelected() == true) {
+            payLabel.setText("Enter Card Number:");
+            num.setVisible(true);
+            num.setEnabled(true);
+            num.setEditable(true);
+            num.requestFocus();
+        }
+    }//GEN-LAST:event_jPanel15MouseExited
+
+    private void paymentKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_paymentKeyPressed
+        int code = evt.getKeyCode();
+        if (code == evt.VK_ENTER) {
+            payBtn.doClick();
+        }
+    }//GEN-LAST:event_paymentKeyPressed
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        int code = evt.getKeyCode();
+        if (code == evt.ALT_DOWN_MASK) {
+            if (code == evt.VK_A) {
+                memAdd.doClick();
+            }
+        }
+        if (code == evt.ALT_DOWN_MASK) {
+            if (code == evt.VK_U) {
+                memRem.doClick();
+            }
+        }
+        if (code == evt.ALT_DOWN_MASK) {
+            if (code == evt.VK_L) {
+                memList.doClick();
+            }
+        }
+    }//GEN-LAST:event_formKeyPressed
+
+    private void searchTextMCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_searchTextMCaretUpdate
+        int dot = evt.getDot();
+        if (dot > 0) {
+            searchMem.doClick();
+        }
+    }//GEN-LAST:event_searchTextMCaretUpdate
+
+    private void memWinWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_memWinWindowActivated
+        searchMem.setVisible(false);
+    }//GEN-LAST:event_memWinWindowActivated
+
+    private void searchTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_searchTextCaretUpdate
+        int dot = evt.getDot();
+        if (dot > 0) {
+            searchBooks.doClick();
+        } else if (dot == 0) {
+            searchClr.doClick();
+        }
+    }//GEN-LAST:event_searchTextCaretUpdate
+
+    private void bookSearchWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_bookSearchWindowActivated
+        searchBooks.setVisible(false);
+        searchClr.setVisible(false);
+    }//GEN-LAST:event_bookSearchWindowActivated
+
+    private void searchClr2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchClr2ActionPerformed
+        DefaultTableModel bkmodel = (DefaultTableModel) bkTable.getModel();
+        int rows = bkmodel.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                bkmodel.removeRow(0);
+            }
+        }
+
+        searchCrit.setSelectedIndex(searchCrit.getSelectedIndex());
+        searchText.setText("");
+
+        img_lbl.setIcon(null);
+    }//GEN-LAST:event_searchClr2ActionPerformed
+
+    private void searchClr3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchClr3ActionPerformed
+        String search = searchCrit.getSelectedItem().toString().toLowerCase();
+
+        String select = new String(searchText.getText());
+
+        if (searchCrit.getSelectedItem().toString().equals("Book Code")) {
+            search = "bkcode";
+            select = new String(searchText.getText());
+        }
+
+        if (searchCrit.getSelectedItem().toString().equals("Assc. No.")) {
+            search = "assc";
+            select = new String(searchText.getText());
+        }
+
+        if (searchCrit.getSelectedItem().toString().equals("Search :")) {
+            search = "name";
+            select = new String("");
+        }
+
+        if (searchCrit.getSelectedItem().toString().equals("Name")) {
+            search = "name";
+            select = new String(searchText.getText());
+        }
+
+
+        DefaultTableModel bkmodel = (DefaultTableModel) bkTable.getModel();
+        int rows = bkmodel.getRowCount();
+        if (rows > 0) {
+            for (int i = 0; i < rows; i++) {
+                bkmodel.removeRow(0);
+            }
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM books where " + " " + search + " " + "like" + " " + "'" + select + "%' ORDER BY" + " " + search + ";";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String id = rs.getString("assc");
+                String name = rs.getString("name");
+                String auth = rs.getString("author");
+                String code = rs.getString("bkcode");
+                String status = rs.getString("available");
+                String getStars = rs.getString("stars");
+                String getTotal = rs.getString("total");
+                
+                String stat;
+                if (status.contentEquals("1")) {
+                    stat = "AVAILABLE";
+                } else {
+                    stat = "NOT AVAILABLE";
+                }
+
+                double rating = Integer.parseInt(getStars) / Integer.parseInt(getTotal);
+                DecimalFormat twoDForm = new DecimalFormat("#.##");
+                String rate = " " + Double.valueOf(twoDForm.format(rating));
+
+                bkmodel.addRow(new Object[]{id, code, name, auth, stat, rate});
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_searchClr3ActionPerformed
+
+    private void bkTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bkTableMouseClicked
+        DefaultTableModel bkmodel = (DefaultTableModel) bkTable.getModel();
+
+        int coord = bkTable.getSelectedRow();
+        int coord2 = bkTable.getSelectedColumn();
+
+        int coordAuth = coord2 + 1;
+        int coordCode = coord2 - 1;
+
+        String nameClick = (String) bkmodel.getValueAt(coord, coord2);
+        String authClick = (String) bkmodel.getValueAt(coord, coordAuth);
+        String codeClick = (String) bkmodel.getValueAt(coord, coordCode);
+
+        byte[] imgData = null;
+        Image img = null;
+        ImageIcon icon;
+        InputStream in;
+
+        try {
+
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+
+            Class.forName("java.sql.Driver");
+            String query = "SELECT * FROM image WHERE name = '" + nameClick + "';";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+
+                Blob image = rs.getBlob(1);
+                imgData = image.getBytes(1, (int) image.length());
+                in = new ByteArrayInputStream(imgData);
+
+            } else {
+                System.out.println("ERROR HERE");
+            }
+
+            img = Toolkit.getDefaultToolkit().createImage(imgData);
+            Image properimg = img.getScaledInstance(img_lbl.getWidth(), img_lbl.getHeight(), img.SCALE_SMOOTH);
+            icon = new ImageIcon(properimg);
+            img_lbl.setIcon(icon);
+
+        } catch (Exception e) {
+            System.out.println("ERROR " + e);
+        }
+
+        /*issueName.setText(nameClick);
+        issueAuthor.setText(authClick);
+        issueCode.setText(codeClick);
+        issueWin.setVisible(true);*/
+    }//GEN-LAST:event_bkTableMouseClicked
+
+    private void printOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printOkActionPerformed
+        MessageFormat header = new MessageFormat("PAYMENT RECEIPT");
+        MessageFormat footer = new MessageFormat("PAID");
+
+        try {
+            boolean complete = printArea.print(header, footer, true, null, null, true);
+
+            if (complete) {
+                msg.showMessageDialog(null, "RECEIPT PRINTED!", "RECEIPT PRINTED", 1);
+                printArea.setVisible(false);
+            } else {
+                msg.showMessageDialog(null, "RECEIPT PRINT Failed!", "RECEIPT PRINT Failed", 0);
+                printArea.setVisible(false);
+            }
+        } catch (PrinterException pe) {
+            msg.showMessageDialog(null, "RECEIPT PRINTED!" + '\n' + pe, "RECEIPT PRINT Failed", 0);
+        }
+    }//GEN-LAST:event_printOkActionPerformed
+
+    private void printFrameWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_printFrameWindowActivated
+        printArea.setEditable(false);
+        String type = null;
+        if (payCard.isSelected() == true) {
+            type = (payCard.getName());
+        }
+        if (payCash.isSelected() == true) {
+            type = (payCash.getName());
+        }
+        if (payCheque.isSelected() == true) {
+            type = (payCheque.getName());
+        }
+        printArea.setText("Name: " + payName.getText() + '\n' + "MemberCode: " + payMem.getText() + '\n' + "Date of Payment: " + payDate.getText() + '\n' + "Paid By: " + type);
+    }//GEN-LAST:event_printFrameWindowActivated
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        printFrame.setVisible(false);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void payDueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payDueActionPerformed
+        String passtxt = new String(passin1.getPassword());
+        mailPass2.setVisible(false);
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM payment where topay < sysDate() ORDER BY name ;";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String date = rs.getString("topay");
+                String name = rs.getString("name");
+                String phone = rs.getString("phone");
+                String mail = rs.getString("paymail");
+
+                Properties properties = new Properties();
+
+                properties.setProperty("mail.smtp.host", "smtp.gmail.com");
+
+                properties.setProperty("mail.smtp.auth", "true");
+
+                properties.put("mail.smtp.starttls.enable", "true");
+
+                Session session = Session.getDefaultInstance(properties, null);
+
+                MimeMessage message = new MimeMessage(session);
+
+                try {
+
+                    message.setFrom(new InternetAddress("library@institution.com"));
+
+                    message.addRecipient(RecipientType.TO, new InternetAddress(mail));
+
+                    message.setSubject("Payment Dues");
+
+                    message.setText("Dear Sir," + '\n' + "You have a monthly payment due at the library." + '\n' + "Please clear it immediately.");
+
+                    Transport transport = session.getTransport("smtp");
+                    transport.connect("smtp.gmail.com", "kanishkaganguly2002@gmail.com", passtxt);
+
+                    transport.sendMessage(message, message.getAllRecipients());
+
+                    msg.showMessageDialog(null, "Mail Sent Successfully", "MAIL SENT", 1);
+
+
+                } catch (AddressException e) {
+
+                    msg.showMessageDialog(null, e, "ERROR", 0);
+
+                }
+
+            }
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "Error!" + '\n' + e, "Error!", 0);
+        }
+    }//GEN-LAST:event_payDueActionPerformed
+
+    private void sendMailPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMailPaymentActionPerformed
+        mailPass2.setVisible(true);
+    }//GEN-LAST:event_sendMailPaymentActionPerformed
+
+    private void jMenuItem59ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem59ActionPerformed
+        bookSearch.dispose();
+    }//GEN-LAST:event_jMenuItem59ActionPerformed
+
+    private void submitRateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitRateActionPerformed
+        int getStars = 0;
+        switch (rateBox.getSelectedIndex()) {
+            case 0: getStars = 1;
+            case 1: getStars = 2;
+            case 2: getStars = 3;
+            case 3: getStars = 4;
+            case 4: getStars = 5;
+        }
+        try {
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "");
+            Statement stmt = con.createStatement();
+
+            String query = ("UPDATE books SET total = (total+1) where name = '" + rateName + "' AND id = '" + rateId + "';");
+            stmt.executeUpdate(query);
+
+            String query2 = ("UPDATE books SET stars = stars + " + getStars + " where name = '" + rateName + "' AND id = '" + rateId + "';");
+            stmt.executeUpdate(query2);
+
+            msg.showMessageDialog(null, "BOOK RATED!", "BOOK RATED", 1);
+
+            rateWin.setVisible(false);
+
+        } catch (Exception e) {
+            msg.showMessageDialog(null, "ERROR IN RATING", "ERROR IN RATING", 0);
+        }
+    }//GEN-LAST:event_submitRateActionPerformed
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                new LibraryProgram().setVisible(true);
+            }
+        });
+    }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addBookBtn;
+    private javax.swing.JFrame addBookWin;
+    private javax.swing.JFrame addWin;
+    private javax.swing.JButton allSearch;
+    private javax.swing.JTextField asscCode;
+    private javax.swing.JTextField asscCodeIn;
+    private javax.swing.JTextField authNameIn;
+    private javax.swing.JTextField authorName;
+    private javax.swing.JTextField bkCodeIn;
+    private javax.swing.JTextField bkIdIn;
+    private javax.swing.JTextField bkName;
+    private javax.swing.JTextField bkNameIn;
+    private javax.swing.JComboBox bkQty;
+    private javax.swing.JTable bkTable;
+    private javax.swing.JButton bookAdd;
+    private javax.swing.JTextField bookCode;
+    private javax.swing.JPanel bookDetailsPanel;
+    private javax.swing.JFrame bookSearch;
+    private javax.swing.JButton bookUpd;
+    private javax.swing.JPanel bookUpdatePanel;
+    private javax.swing.JButton booksIssued;
+    private javax.swing.JButton byCode;
+    private javax.swing.JButton byName;
+    private javax.swing.JButton confirm;
+    private javax.swing.JTextField custDate;
+    private javax.swing.JTextField custLoc;
+    private javax.swing.JTextField custMob;
+    private javax.swing.JTextField custName;
+    private javax.swing.JTextField custNum;
+    private javax.swing.JTextField custPhone;
+    private javax.swing.JButton delRec;
+    private javax.swing.JTextField email;
+    private javax.swing.JFileChooser fc;
+    private javax.swing.JLabel img_lbl;
+    private javax.swing.JTextField issueAuthor;
+    private javax.swing.JButton issueBooksBtn;
+    private javax.swing.JButton issueBtn;
+    private javax.swing.JTextField issueCode;
+    private javax.swing.JButton issueCodeLoad;
+    private javax.swing.JTextField issueDate;
+    private javax.swing.JTextField issueId;
+    private javax.swing.JButton issueMemLoad;
+    private javax.swing.JTextField issueMemName;
+    private javax.swing.JTextField issueMemNum;
+    private javax.swing.JTextField issueName;
+    private javax.swing.JButton issueNameLoad;
+    private javax.swing.JFrame issueWin;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
+    private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel43;
+    private javax.swing.JLabel jLabel44;
+    private javax.swing.JLabel jLabel45;
+    private javax.swing.JLabel jLabel46;
+    private javax.swing.JLabel jLabel47;
+    private javax.swing.JLabel jLabel48;
+    private javax.swing.JLabel jLabel49;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel50;
+    private javax.swing.JLabel jLabel51;
+    private javax.swing.JLabel jLabel52;
+    private javax.swing.JLabel jLabel53;
+    private javax.swing.JLabel jLabel54;
+    private javax.swing.JLabel jLabel55;
+    private javax.swing.JLabel jLabel56;
+    private javax.swing.JLabel jLabel57;
+    private javax.swing.JLabel jLabel58;
+    private javax.swing.JLabel jLabel59;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel60;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu13;
+    private javax.swing.JMenu jMenu14;
+    private javax.swing.JMenu jMenu15;
+    private javax.swing.JMenu jMenu16;
+    private javax.swing.JMenu jMenu17;
+    private javax.swing.JMenu jMenu18;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar jMenuBar7;
+    private javax.swing.JMenuBar jMenuBar8;
+    private javax.swing.JMenuBar jMenuBar9;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem55;
+    private javax.swing.JMenuItem jMenuItem56;
+    private javax.swing.JMenuItem jMenuItem57;
+    private javax.swing.JMenuItem jMenuItem58;
+    private javax.swing.JMenuItem jMenuItem59;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem60;
+    private javax.swing.JMenuItem jMenuItem61;
+    private javax.swing.JMenuItem jMenuItem62;
+    private javax.swing.JMenuItem jMenuItem63;
+    private javax.swing.JMenuItem jMenuItem64;
+    private javax.swing.JMenuItem jMenuItem65;
+    private javax.swing.JMenuItem jMenuItem66;
+    private javax.swing.JMenuItem jMenuItem67;
+    private javax.swing.JMenuItem jMenuItem68;
+    private javax.swing.JMenuItem jMenuItem69;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem70;
+    private javax.swing.JMenuItem jMenuItem71;
+    private javax.swing.JMenuItem jMenuItem72;
+    private javax.swing.JMenuItem jMenuItem73;
+    private javax.swing.JMenuItem jMenuItem74;
+    private javax.swing.JMenuItem jMenuItem75;
+    private javax.swing.JMenuItem jMenuItem76;
+    private javax.swing.JMenuItem jMenuItem77;
+    private javax.swing.JMenuItem jMenuItem78;
+    private javax.swing.JMenuItem jMenuItem79;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem80;
+    private javax.swing.JMenuItem jMenuItem81;
+    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
+    private javax.swing.JPanel jPanel16;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator10;
+    private javax.swing.JSeparator jSeparator11;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator23;
+    private javax.swing.JPopupMenu.Separator jSeparator24;
+    private javax.swing.JPopupMenu.Separator jSeparator25;
+    private javax.swing.JPopupMenu.Separator jSeparator26;
+    private javax.swing.JPopupMenu.Separator jSeparator27;
+    private javax.swing.JPopupMenu.Separator jSeparator28;
+    private javax.swing.JPopupMenu.Separator jSeparator29;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator30;
+    private javax.swing.JPopupMenu.Separator jSeparator31;
+    private javax.swing.JSeparator jSeparator32;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JSeparator jSeparator9;
+    private javax.swing.JPanel libraryPanel;
+    private javax.swing.JButton loadBook;
+    private javax.swing.JButton loadRec;
+    private javax.swing.JButton mailDue;
+    private javax.swing.JDialog mailPass;
+    private javax.swing.JDialog mailPass2;
+    private javax.swing.JButton memAdd;
+    private javax.swing.JButton memAddBtn;
+    private javax.swing.JTextField memCode;
+    private javax.swing.JButton memList;
+    private javax.swing.JButton memRem;
+    private javax.swing.JFrame memWin;
+    private javax.swing.JPanel memberPanel;
+    private javax.swing.JOptionPane msg;
+    private javax.swing.JTextField namePay;
+    private javax.swing.JTextField num;
+    private javax.swing.JButton overdue;
+    private javax.swing.JTable overdueTbl;
+    private javax.swing.JFrame overdueWin;
+    private javax.swing.JPasswordField passin;
+    private javax.swing.JPasswordField passin1;
+    private javax.swing.JTextField payAmt;
+    private javax.swing.JButton payBtn;
+    private javax.swing.JRadioButton payCard;
+    private javax.swing.JRadioButton payCash;
+    private javax.swing.JCheckBox payCheck;
+    private javax.swing.JRadioButton payCheque;
+    private javax.swing.JLabel payDate;
+    private javax.swing.JButton payDue;
+    private javax.swing.JButton payDueBtn;
+    private javax.swing.JFrame payHere;
+    private javax.swing.JLabel payLabel;
+    private javax.swing.JLabel payLoc;
+    private javax.swing.JLabel payMail;
+    private javax.swing.JLabel payMem;
+    private javax.swing.JLabel payName;
+    private javax.swing.JButton payNw;
+    private javax.swing.JLabel payPhone;
+    private javax.swing.JTable payTable;
+    private javax.swing.JFrame payWin;
+    private javax.swing.JFrame payment;
+    private javax.swing.ButtonGroup paymentMethod;
+    private javax.swing.JButton popSearch;
+    private javax.swing.JPopupMenu popup;
+    private javax.swing.JTextArea printArea;
+    private javax.swing.JFrame printFrame;
+    private javax.swing.JButton printOk;
+    private javax.swing.JComboBox rateBox;
+    private javax.swing.JFrame rateWin;
+    private javax.swing.JButton remBook;
+    private javax.swing.JTextField returnAuthor;
+    private javax.swing.JButton returnBooksBtn;
+    private javax.swing.JButton returnBtn;
+    private javax.swing.JTextField returnCode;
+    private javax.swing.JButton returnCodeLoad;
+    private javax.swing.JTextField returnId;
+    private javax.swing.JButton returnMemLoad;
+    private javax.swing.JTextField returnMemName;
+    private javax.swing.JTextField returnMemNum;
+    private javax.swing.JTextField returnName;
+    private javax.swing.JButton returnNameLoad;
+    private javax.swing.JFrame returnWin;
+    private javax.swing.JButton searchBooks;
+    private javax.swing.JButton searchBooksBtn;
+    private javax.swing.JButton searchClr;
+    private javax.swing.JButton searchClr1;
+    private javax.swing.JButton searchClr2;
+    private javax.swing.JButton searchClr3;
+    private javax.swing.JComboBox searchCrit;
+    private javax.swing.JComboBox searchCritM;
+    private javax.swing.JButton searchMem;
+    private javax.swing.JTextField searchText;
+    private javax.swing.JTextField searchTextM;
+    private javax.swing.JButton sendMail;
+    private javax.swing.JButton sendMailPayment;
+    private javax.swing.JButton submitRate;
+    private javax.swing.JTextField toBePaid;
+    private javax.swing.JButton updBook;
+    private javax.swing.JFrame updBookWin;
+    private javax.swing.JTextField updEmail;
+    private javax.swing.JTextField updLoc;
+    private javax.swing.JTextField updMem;
+    private javax.swing.JTextField updMob;
+    private javax.swing.JTextField updName;
+    private javax.swing.JButton updRec;
+    private javax.swing.JTextField updRes;
+    private javax.swing.JFrame updWin;
+    private javax.swing.JTable userTable;
+    // End of variables declaration//GEN-END:variables
+}
